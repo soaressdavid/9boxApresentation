@@ -1,0 +1,332 @@
+/* =============================================
+   PERFIL
+   ============================================= */
+
+/* ---- LOGIN ---- */
+.pf-login-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.pf-login-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.pf-login-icon i {
+  font-size: 28px;
+  color: white;
+}
+
+.pf-login-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.pf-login-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  background: none;
+  padding: 0;
+  text-align: left;
+}
+
+.pf-login-card .pg-field {
+  text-align: left;
+}
+
+/* ---- LAYOUT PERFIL ---- */
+.pf-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 860px;
+  align-items: flex-start;
+}
+
+/* ---- CARDS ---- */
+.pf-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+}
+
+.pf-card-left {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.pf-card-right {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- FOTO ---- */
+.pf-foto-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.pf-foto {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.pf-foto:hover {
+  transform: scale(1.04);
+}
+
+.pf-foto span {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  z-index: 1;
+}
+
+.pf-foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pf-foto-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 47, 143, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 2;
+}
+
+.pf-foto:hover .pf-foto-overlay {
+  opacity: 1;
+}
+
+.pf-foto-overlay i {
+  color: white;
+  font-size: 22px;
+}
+
+.pf-foto-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: none;
+  padding: 0;
+}
+
+/* ---- NOME E TIPO ---- */
+.pf-nome {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.3;
+}
+
+.pf-tipo-badge {
+  display: inline-block;
+}
+
+/* ---- STATS ---- */
+.pf-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.pf-stat {
+  background: #f4f6ff;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.pf-stat-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.pf-stat-valor {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.pf-stat-valor.stars {
+  color: #ffc107;
+  font-size: 13px;
+}
+
+/* ---- SAIR ---- */
+.pf-btn-sair {
+  margin-top: 4px;
+  width: 100%;
+  padding: 9px;
+  font-size: 13px;
+  background: #fff0f0;
+  color: var(--danger);
+  border: 1.5px solid #ffd0d0;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.pf-btn-sair:hover {
+  background: #ffe0e0;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---- TABS ---- */
+.pf-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0;
+}
+
+.pf-tab {
+  margin-top: 0;
+  width: auto;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.2s;
+}
+
+.pf-tab:hover {
+  color: var(--primary-light);
+  transform: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.pf-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary-light);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ---- AVALIAÇÕES NO PERFIL ---- */
+.pf-av-item {
+  background: #f8f9ff;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--primary-light);
+}
+
+.pf-av-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pf-av-media {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.pf-av-data {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.pf-av-criterios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.pf-av-badge {
+  font-size: 11px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: var(--text);
+}
+
+.pf-av-badge .mini-stars {
+  color: #ffc107;
+}
+
+.pf-av-comentario {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  background: none;
+  padding: 0;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 700px) {
+  .pf-layout {
+    flex-direction: column;
+  }
+
+  .pf-card-left {
+    width: 100%;
+  }
+}

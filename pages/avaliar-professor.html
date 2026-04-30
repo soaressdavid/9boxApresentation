@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliar Professor — Portal de Estágio</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/avaliacoes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2>Avaliar Professor</h2>
+  <a href="../index.html">Voltar</a>
+</header>
+
+<main class="wrapper">
+  <div class="av-form-card" style="max-width:520px;width:100%">
+
+    <div class="av-field">
+      <label for="avaliado">Professor</label>
+      <select id="avaliado">
+        <option value="">Selecione...</option>
+      </select>
+    </div>
+
+    <div class="av-criterios">
+      <p class="av-section-title">Critérios de Avaliação</p>
+
+      <div class="av-criterio">
+        <span class="av-criterio-label"><i class="fa-regular fa-clock"></i> Pontualidade</span>
+        <div class="stars" data-criterio="pontualidade" role="group">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+      </div>
+      <div class="av-criterio">
+        <span class="av-criterio-label"><i class="fa-regular fa-comments"></i> Comunicação</span>
+        <div class="stars" data-criterio="comunicacao" role="group">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+      </div>
+      <div class="av-criterio">
+        <span class="av-criterio-label"><i class="fa-solid fa-code"></i> Didática</span>
+        <div class="stars" data-criterio="tecnico" role="group">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+      </div>
+      <div class="av-criterio">
+        <span class="av-criterio-label"><i class="fa-solid fa-bolt"></i> Disponibilidade</span>
+        <div class="stars" data-criterio="proatividade" role="group">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+      </div>
+      <div class="av-criterio">
+        <span class="av-criterio-label"><i class="fa-solid fa-people-group"></i> Relacionamento</span>
+        <div class="stars" data-criterio="equipe" role="group">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="av-media-box">
+      <span>Média geral</span>
+      <span class="av-media-valor" id="media-geral">—</span>
+    </div>
+
+    <div class="av-field">
+      <label for="comentario">Comentário <span class="av-opcional">(opcional)</span></label>
+      <textarea id="comentario" placeholder="Descreva sua avaliação..."></textarea>
+    </div>
+
+    <button class="av-submit" onclick="salvarDireto('professor')">
+      <i class="fa-solid fa-paper-plane"></i> Enviar Avaliação
+    </button>
+
+  </div>
+</main>
+
+<script src="../css/js/script.js"></script>
+<script src="../css/js/avaliacoes.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    tipoAtual = 'professor';
+    popularSelect();
+    initAllStars();
+  });
+</script>
+</body>
+</html>

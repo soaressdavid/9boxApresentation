@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliar Estagiário — Portal de Estágio</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/avaliacoes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2>Avaliar Estagiário</h2>
+  <a href="../index.html">Voltar</a>
+</header>
+
+<main class="wrapper">
+  <div class="av-form-card" style="max-width:520px;width:100%">
+
+    <div class="av-field">
+      <label for="avaliado">Estagiário</label>
+      <select id="avaliado">
+        <option value="">Selecione...</option>
+      </select>
+    </div>
+
+    <div class="av-criterios-estagiario">
+      <p class="av-section-title">Aspectos para Comentar</p>
+      
+      <div class="av-aspecto">
+        <span class="av-aspecto-label"><i class="fa-regular fa-clock"></i> Pontualidade</span>
+        <p class="av-aspecto-desc">Como tem sido a pontualidade do estagiário?</p>
+      </div>
+      <div class="av-aspecto">
+        <span class="av-aspecto-label"><i class="fa-regular fa-comments"></i> Comunicação</span>
+        <p class="av-aspecto-desc">Como é a comunicação e clareza nas interações?</p>
+      </div>
+      <div class="av-aspecto">
+        <span class="av-aspecto-label"><i class="fa-solid fa-code"></i> Desempenho Técnico</span>
+        <p class="av-aspecto-desc">Como está o desenvolvimento técnico e aprendizado?</p>
+      </div>
+      <div class="av-aspecto">
+        <span class="av-aspecto-label"><i class="fa-solid fa-bolt"></i> Proatividade</span>
+        <p class="av-aspecto-desc">Demonstra iniciativa e busca por soluções?</p>
+      </div>
+      <div class="av-aspecto">
+        <span class="av-aspecto-label"><i class="fa-solid fa-people-group"></i> Trabalho em Equipe</span>
+        <p class="av-aspecto-desc">Como interage e colabora com a equipe?</p>
+      </div>
+    </div>
+
+    <div class="av-field">
+      <label for="comentario">Comentário sobre o estagiário <span class="av-obrigatorio">(obrigatório)</span></label>
+      <textarea id="comentario" placeholder="Descreva como tem sido o desempenho do estagiário nos aspectos mencionados acima. Seja específico e construtivo nos comentários..." rows="6"></textarea>
+    </div>
+
+    <button class="av-submit" onclick="salvarEstagiario()">
+      <i class="fa-solid fa-paper-plane"></i> Enviar Comentário
+    </button>
+
+  </div>
+</main>
+
+<script src="../css/js/script.js"></script>
+<script src="../css/js/avaliacoes.js"></script>
+<script>
+  // Inicializa direto no tipo estagiário
+  document.addEventListener('DOMContentLoaded', () => {
+    tipoAtual = 'estagiario';
+    popularSelect();
+    // Não inicializa stars para estagiários
+  });
+</script>
+</body>
+</html>

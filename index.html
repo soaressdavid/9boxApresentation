@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<header>
+  <h2>Portal de Gestão de Pessoas</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()" title="Modo escuro">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()" title="Minha conta">
+      <i class="fa-solid fa-user" aria-hidden="true"></i>
+    </div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info" id="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Visitante</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo">Não identificado</div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="perfil.html" class="user-dropdown-item">
+        <i class="fa-solid fa-user-pen"></i> Meu Perfil
+      </a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair da conta
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item">
+      <a href="index.html" class="navbar-link active">
+        <i class="fa-solid fa-home"></i>
+        <span>Início</span>
+      </a>
+    </li>
+    <li class="navbar-item">
+      <a href="pages/cadastrar.html" class="navbar-link">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Cadastrar</span>
+      </a>
+    </li>
+    <li class="navbar-item">
+      <a href="pages/consultar.html" class="navbar-link">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Consultar</span>
+      </a>
+    </li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i>
+        <span>Avaliações</span>
+        <i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="pages/avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="pages/nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="pages/competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="pages/avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item">
+      <a href="pages/relatorios.html" class="navbar-link">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span>Relatórios</span>
+      </a>
+    </li>
+    <li class="navbar-item">
+      <a href="perfil.html" class="navbar-link">
+        <i class="fa-solid fa-user"></i>
+        <span>Perfil</span>
+      </a>
+    </li>
+    <li class="navbar-item">
+      <a href="pages/sobre.html" class="navbar-link">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Sobre</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<main class="wrapper">
+  <!-- DASHBOARD STATS -->
+  <div class="dashboard">
+    <div class="dash-stats" id="dash-stats"></div>
+    <nav class="container" aria-label="Menu principal">
+
+      <a href="pages/cadastrar.html" class="card">
+        <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+        <p>Cadastrar</p>
+      </a>
+
+      <a href="pages/consultar.html" class="card">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <p>Consultar</p>
+      </a>
+
+      <a href="pages/avaliacoes.html" class="card">
+        <i class="fa-solid fa-star" aria-hidden="true"></i>
+        <p>Avaliações</p>
+      </a>
+
+      <a href="pages/nine-box.html" class="card">
+        <i class="fa-solid fa-th" aria-hidden="true"></i>
+        <p>Nine Box</p>
+      </a>
+
+      <a href="pages/relatorios.html" class="card">
+        <i class="fa-solid fa-chart-bar" aria-hidden="true"></i>
+        <p>Relatórios</p>
+      </a>
+
+      <a href="pages/competencias.html" class="card">
+        <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
+        <p>Competências</p>
+      </a>
+
+    </nav>
+  </div>
+</main>
+
+<script src="css/js/script.js"></script>
+<script src="css/js/navbar.js"></script>
+<script>
+// ---- DROPDOWN DO USUÁRIO ----
+function toggleUserMenu() {
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+
+// Fechar ao clicar fora
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('user-menu');
+  if (menu && !menu.contains(e.target)) {
+    document.getElementById('user-dropdown').classList.remove('open');
+  }
+});
+
+function sairDaConta() {
+  localStorage.removeItem('perfilLogado');
+  location.reload();
+}
+
+// ---- DASHBOARD + INFO DO USUÁRIO ----
+document.addEventListener('DOMContentLoaded', () => {
+  const contatos = getContatos();
+  const avaliacoes = getAvaliacoes();
+  const nineBox = JSON.parse(localStorage.getItem('nineBoxAvaliacoes') || '[]');
+
+  const gestores = contatos.filter(c => c.tipo === 'gestor').length;
+  const colaboradores = contatos.filter(c => c.tipo === 'colaborador').length;
+  const totalAv = avaliacoes.length;
+  const totalNB = nineBox.length;
+
+  const container = document.getElementById('dash-stats');
+  if (container) {
+    if (contatos.length === 0) {
+      // Mensagem de boas-vindas para novos usuários
+      container.innerHTML = `
+        <div class="dash-welcome">
+          <i class="fa-solid fa-users"></i>
+          <h3>Bem-vindo ao Portal de Gestão de Pessoas!</h3>
+          <p>Comece cadastrando gestores e colaboradores para usar o sistema.</p>
+          <a href="pages/cadastrar.html" class="dash-welcome-btn">
+            <i class="fa-solid fa-user-plus"></i> Cadastrar primeira pessoa
+          </a>
+        </div>`;
+    } else {
+      container.innerHTML = `
+        <div class="dash-stat">
+          <i class="fa-solid fa-user-tie"></i>
+          <div><span class="dash-stat-val">${gestores}</span><span class="dash-stat-label">Gestores</span></div>
+        </div>
+        <div class="dash-stat">
+          <i class="fa-solid fa-users"></i>
+          <div><span class="dash-stat-val">${colaboradores}</span><span class="dash-stat-label">Colaboradores</span></div>
+        </div>
+        <div class="dash-stat">
+          <i class="fa-solid fa-star"></i>
+          <div><span class="dash-stat-val">${totalAv}</span><span class="dash-stat-label">Avaliações</span></div>
+        </div>
+        <div class="dash-stat">
+          <i class="fa-solid fa-th"></i>
+          <div><span class="dash-stat-val">${totalNB}</span><span class="dash-stat-label">Nine Box</span></div>
+        </div>
+      `;
+    }
+  }
+
+  // Preencher info do usuário logado no dropdown
+  const sessao = JSON.parse(localStorage.getItem('perfilLogado') || 'null');
+  const nomeEl = document.getElementById('user-dropdown-nome');
+  const tipoEl = document.getElementById('user-dropdown-tipo');
+  const avatarEl = document.getElementById('user-dropdown-avatar');
+  const btnSair = document.getElementById('btn-sair-header');
+
+  if (sessao) {
+    const pessoa = contatos.find(c => c.id === sessao.id);
+    if (pessoa) {
+      if (nomeEl) nomeEl.textContent = pessoa.nome;
+      if (tipoEl) tipoEl.textContent = pessoa.tipo === 'gestor' ? 'Gestor' : 'Colaborador';
+      if (btnSair) btnSair.style.display = 'flex';
+
+      if (avatarEl) {
+        if (pessoa.foto) {
+          avatarEl.innerHTML = `<img src="${pessoa.foto}" alt="${pessoa.nome}">`;
+        } else {
+          const iniciais = pessoa.nome.split(' ').slice(0, 2).map(p => p[0]).join('').toUpperCase();
+          avatarEl.innerHTML = iniciais;
+        }
+      }
+    }
+  } else {
+    if (nomeEl) nomeEl.textContent = 'Visitante';
+    if (tipoEl) tipoEl.textContent = 'Não identificado';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competências — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/competencias.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2 id="comp-header-title">Competências</h2>
+  <a href="../index.html">Voltar</a>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span>
+        <i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link active"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+    <li class="navbar-item"><a href="sobre.html" class="navbar-link"><i class="fa-solid fa-circle-info"></i><span>Sobre</span></a></li>
+  </ul>
+</nav>
+
+<main class="comp-main">
+
+  <!-- ===== LISTA DE COMPETÊNCIAS ===== -->
+  <div id="tela-lista" class="comp-tela">
+    <div class="comp-lista-header">
+      <div>
+        <h3>Competências Cadastradas</h3>
+        <p>Gerencie as competências utilizadas nas avaliações</p>
+      </div>
+      <button class="comp-btn-novo" onclick="abrirFormulario()">
+        <i class="fa-solid fa-plus"></i> Nova Competência
+      </button>
+    </div>
+
+    <div id="comp-lista-container">
+      <div class="comp-empty">
+        <i class="fa-solid fa-clipboard-list"></i>
+        <p>Nenhuma competência cadastrada ainda.</p>
+        <button class="comp-btn-novo" onclick="abrirFormulario()">
+          <i class="fa-solid fa-plus"></i> Criar primeira competência
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FORMULÁRIO DE COMPETÊNCIA ===== -->
+  <div id="tela-form" class="comp-tela" style="display:none">
+    <div class="comp-form-card">
+
+      <div class="comp-form-header">
+        <div>
+          <h3 id="form-titulo">Nova Competência</h3>
+          <p class="comp-form-sub">
+            <i class="fa-solid fa-circle-dot" style="color:var(--success)"></i>
+            Crie uma nova competência para sua avaliação
+          </p>
+        </div>
+        <button class="comp-btn-cancelar" onclick="fecharFormulario()">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </button>
+      </div>
+
+      <!-- CAMPOS PRINCIPAIS -->
+      <div class="comp-row">
+        <div class="comp-field" style="flex:2">
+          <label for="comp-nome">Nome da competência:</label>
+          <input type="text" id="comp-nome" placeholder="Ex: Delegar tarefas">
+        </div>
+        <div class="comp-field">
+          <label for="comp-de">Competência de:</label>
+          <select id="comp-de">
+            <option value="">Selecione...</option>
+            <option value="gestor">Gestor</option>
+            <option value="colaborador">Colaborador</option>
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div class="comp-field">
+          <label for="comp-tipo">Tipo:</label>
+          <select id="comp-tipo">
+            <option value="">Selecione...</option>
+            <option value="desempenho">Desempenho</option>
+            <option value="comportamento">Comportamento</option>
+            <option value="tecnica">Técnica</option>
+            <option value="lideranca">Liderança</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="comp-field">
+        <label for="comp-descricao">Descrição:</label>
+        <textarea id="comp-descricao" placeholder="Quanto à habilidade de delegar tarefas ao time, avalie:" rows="3"></textarea>
+      </div>
+
+      <!-- CRITÉRIOS -->
+      <div class="comp-criterios-section">
+        <h4>Critérios de Avaliação:</h4>
+        <div class="comp-criterios-grid" id="comp-criterios-grid">
+          <div class="comp-criterio-item">
+            <label><i class="fa-solid fa-square-check"></i> Critério 1</label>
+            <textarea placeholder="Descreva o critério 1..." rows="3"></textarea>
+          </div>
+          <div class="comp-criterio-item">
+            <label><i class="fa-solid fa-square-check"></i> Critério 2</label>
+            <textarea placeholder="Descreva o critério 2..." rows="3"></textarea>
+          </div>
+          <div class="comp-criterio-item">
+            <label><i class="fa-solid fa-square-check"></i> Critério 3</label>
+            <textarea placeholder="Descreva o critério 3..." rows="3"></textarea>
+          </div>
+          <div class="comp-criterio-item">
+            <label><i class="fa-solid fa-square-check"></i> Critério 4</label>
+            <textarea placeholder="Descreva o critério 4..." rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- ESCALA DE NOTAS -->
+        <div class="comp-escala-info">
+          <i class="fa-solid fa-circle-info"></i>
+          Os critérios são avaliados de 1 a 4, segundo a seguinte métrica:
+        </div>
+        <div class="comp-escala-grid">
+          <div class="comp-escala-item nota-1">
+            <span>Nota 1 – Não cumpre o requisito</span>
+          </div>
+          <div class="comp-escala-item nota-3">
+            <span>Nota 3 – Cumpre sempre</span>
+          </div>
+          <div class="comp-escala-item nota-2">
+            <span>Nota 2 – Cumpre moderadamente</span>
+          </div>
+          <div class="comp-escala-item nota-4">
+            <span>Nota 4 – Cumpre o requisito e supera expectativas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="comp-form-actions">
+        <button class="comp-btn-voltar" onclick="fecharFormulario()">Voltar</button>
+        <button class="comp-btn-salvar" onclick="salvarCompetencia()">
+          <i class="fa-solid fa-floppy-disk"></i> Criar Competência
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script src="../css/js/script.js"></script>
+<script src="../css/js/competencias.js"></script>
+<script src="../css/js/navbar.js"></script>
+</body>
+</html>
