@@ -10,7 +10,7 @@ Sistema de avaliação de desempenho com gestão de colaboradores, avaliações 
 ## 🎯 Funcionalidades
 
 - Sistema de permissões (Admin, Gestor, Colaborador)
-- Cadastro e busca por RA (Registro Acadêmico - 7 dígitos)
+- Cadastro e busca por RA (Registro Acadêmico - identificador único)
 - Avaliações de desempenho com critérios
 - Sistema Nine Box (Performance × Potencial)
 - Avaliações 360° e 180°
@@ -56,11 +56,15 @@ npx serve .
 
 ## 🔐 Credenciais de Teste
 
+**IMPORTANTE**: Use RAs reais das pessoas. Os exemplos abaixo são fictícios.
+
 ```
-Admin:        admin@empresa.com / admin123 (RA: 1000000)
-Gestor:       joao@empresa.com / senha123 (RA: 2021001)
-Colaborador:  ana@empresa.com / senha123 (RA: 2022001)
+Admin:        admin@eniac.edu.br / admin123 (RA: use RA real do admin)
+Gestor:       joao@eniac.edu.br / senha123 (RA: use RA real do gestor)
+Colaborador:  ana@eniac.edu.br / senha123 (RA: use RA real do colaborador)
 ```
+
+**Sistema de RA**: Cada pessoa já tem seu RA (como CPF). No cadastro, a pessoa informa o RA dela.
 
 ## 📚 Documentação
 

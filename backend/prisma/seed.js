@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -18,7 +18,7 @@ async function main() {
             ra: '1234567',
             nome: 'admin@admin123',
             email: 'admin@eniac.edu.br',
-            senha: await bcrypt.hash('admin123', 10),
+            senha: await hash('admin123', 10),
             tipo: 'admin',
             cargo: 'Administrador',
             departamento: 'TI'
@@ -30,7 +30,7 @@ async function main() {
             ra: '2021001',
             nome: 'João Silva',
             email: 'joao@eniac.edu.br',
-            senha: await bcrypt.hash('joao123', 10),
+            senha: await hash('joao123', 10),
             tipo: 'gestor',
             cargo: 'Gerente de TI',
             departamento: 'TI'
@@ -42,7 +42,7 @@ async function main() {
             ra: '2022001',
             nome: 'Ana Costa',
             email: 'ana@eniac.edu.br',
-            senha: await bcrypt.hash('ana123', 10),
+            senha: await hash('ana123', 10),
             tipo: 'colaborador',
             cargo: 'Desenvolvimento',
             departamento: 'TI'
