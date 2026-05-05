@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .rel-wrapper { align-items: flex-start; padding: 32px 20px; }
+    .rel-container { width: 100%; max-width: 960px; }
+
+    /* Tabs */
+    .rel-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+    .rel-tab {
+      padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; border: none; background: transparent; font-family: inherit;
+      transition: all 0.2s; margin: 0; width: auto; border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .rel-tab:hover { color: var(--primary); transform: none; box-shadow: none; }
+    .rel-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* Seções */
+    .rel-section { display: none; }
+    .rel-section.active { display: block; }
+
+    /* Stats cards */
+    .rel-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .rel-stat-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); padding: 16px 18px;
+      display: flex; align-items: center; gap: 14px; transition: all 0.2s;
+    }
+    .rel-stat-card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+    .rel-stat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #eff6ff; display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light); font-size: 20px; flex-shrink: 0;
+    }
+    .rel-stat-val { font-size: 24px; font-weight: 700; color: var(--primary); line-height: 1; }
+    .rel-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+    /* Seção de usuário */
+    .rel-user-search {
+      display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .rel-user-search select {
+      flex: 1; min-width: 200px; padding: 10px 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); font-size: 14px; font-family: inherit;
+      color: var(--text); background: #fafafa; transition: border-color 0.2s;
+    }
+    .rel-user-search select:focus { border-color: var(--primary-light); outline: none; background: var(--surface); }
+    .btn-buscar-rel {
+      padding: 10px 20px; background: var(--primary); color: white; border: none;
+      border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 0.2s; margin: 0; width: auto;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-buscar-rel:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,58,138,0.25); }
+
+    /* Relatório de usuário */
+    .rel-user-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+    }
+    .rel-user-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .rel-user-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 20px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+    }
+    .rel-user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .rel-user-nome { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .rel-user-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    .rel-section-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    /* Avaliações no relatório */
+    .rel-av-item {
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      padding: 12px 14px; margin-bottom: 8px;
+    }
+    .rel-av-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .rel-av-tipo { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
+    .rel-av-tipo.gestor_para_colaborador { background: #dbeafe; color: #1e40af; }
+    .rel-av-tipo.colaborador_para_gestor { background: #dcfce7; color: #166534; }
+    .rel-av-tipo.avaliacao_360 { background: #fef3c7; color: #92400e; }
+    .rel-av-media { font-size: 14px; font-weight: 700; color: var(--primary); }
+    .rel-av-data { font-size: 11px; color: var(--text-muted); }
+    .rel-av-comentario { font-size: 13px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+
+    /* Nine Box no relatório */
+    .rel-nb-card {
+      background: #eff6ff; border-radius: var(--radius-sm); padding: 14px 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .rel-nb-icon { font-size: 28px; }
+    .rel-nb-cat { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .rel-nb-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Exportar */
+    .btn-exportar {
+      padding: 10px 20px; background: var(--success); color: white; border: none;
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 0.2s; margin: 0; width: auto;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-exportar:hover { background: #047857; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
+
+    /* Distribuição Nine Box */
+    .nb-dist-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 400px;
+    }
+    .nb-dist-cell {
+      border-radius: var(--radius-sm); padding: 10px; text-align: center;
+      font-size: 12px; font-weight: 600;
+    }
+    .nb-dist-cell .nb-dist-count { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .nb-dist-cell .nb-dist-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    body.dark-mode .rel-stat-card,
+    body.dark-mode .rel-user-card,
+    body.dark-mode .rel-av-item { background: #1e293b; }
+    body.dark-mode .rel-stat-icon { background: #1e3a5f; }
+    body.dark-mode .rel-user-search select { background: #0f172a; color: #f1f5f9; border-color: #334155; }
+    body.dark-mode .rel-nb-card { background: #1e3a5f; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Relatórios</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link active"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main class="wrapper rel-wrapper">
+  <div class="rel-container">
+
+    <!-- Tabs -->
+    <div class="rel-tabs" id="rel-tabs">
+      <!-- Injetadas pelo JS conforme permissão -->
+    </div>
+
+    <!-- Dashboard (gestor/admin) -->
+    <div class="rel-section" id="tab-dashboard">
+      <div class="rel-stats" id="dash-stats">
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div><div class="rel-stat-val" id="s-usuarios">—</div><div class="rel-stat-label">Usuários</div></div>
+        </div>
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-user-tie"></i></div>
+          <div><div class="rel-stat-val" id="s-gestores">—</div><div class="rel-stat-label">Gestores</div></div>
+        </div>
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-user"></i></div>
+          <div><div class="rel-stat-val" id="s-colaboradores">—</div><div class="rel-stat-label">Colaboradores</div></div>
+        </div>
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-star"></i></div>
+          <div><div class="rel-stat-val" id="s-avaliacoes">—</div><div class="rel-stat-label">Avaliações</div></div>
+        </div>
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div><div class="rel-stat-val" id="s-media">—</div><div class="rel-stat-label">Média Geral</div></div>
+        </div>
+        <div class="rel-stat-card">
+          <div class="rel-stat-icon"><i class="fa-solid fa-th"></i></div>
+          <div><div class="rel-stat-val" id="s-ninebox">—</div><div class="rel-stat-label">Nine Box</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:8px">
+        <div class="rel-section-title"><i class="fa-solid fa-th"></i> Distribuição Nine Box</div>
+        <div class="nb-dist-grid" id="nb-dist-grid">
+          <div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relatório por usuário -->
+    <div class="rel-section" id="tab-usuario">
+      <div class="rel-user-search">
+        <select id="sel-usuario">
+          <option value="">Selecione um usuário...</option>
+        </select>
+        <button class="btn-buscar-rel" onclick="carregarRelatorioUsuario()">
+          <i class="fa-solid fa-magnifying-glass"></i> Ver Relatório
+        </button>
+      </div>
+      <div id="rel-usuario-resultado"></div>
+    </div>
+
+    <!-- Meu relatório (colaborador) -->
+    <div class="rel-section" id="tab-meu">
+      <div id="rel-meu-resultado">
+        <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando...</p></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script type="module">
+  import { requireAuth, getUser, isAdmin, isGestorOrAdmin, isColaborador } from '../js/auth.js';
+  import { usersApi, reportsApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  requireAuth();
+
+  const user = getUser();
+  let tabAtual = '';
+
+  // Monta tabs conforme permissão
+  const tabs = [];
+  if (isGestorOrAdmin()) tabs.push({ id: 'dashboard', label: '<i class="fa-solid fa-chart-bar"></i> Dashboard' });
+  if (isGestorOrAdmin()) tabs.push({ id: 'usuario',   label: '<i class="fa-solid fa-user"></i> Por Usuário' });
+  tabs.push({ id: 'meu', label: '<i class="fa-solid fa-user-circle"></i> Meu Relatório' });
+
+  const tabsEl = document.getElementById('rel-tabs');
+  tabsEl.innerHTML = tabs.map(t => `
+    <button class="rel-tab" data-tab="${t.id}" onclick="setTab('${t.id}')">${t.label}</button>
+  `).join('');
+
+  window.setTab = function(tab) {
+    tabAtual = tab;
+    document.querySelectorAll('.rel-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+    document.querySelectorAll('.rel-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`tab-${tab}`)?.classList.add('active');
+
+    if (tab === 'dashboard') carregarDashboard();
+    if (tab === 'usuario')   carregarSelectUsuarios();
+    if (tab === 'meu')       carregarMeuRelatorio();
+  };
+
+  // Ativa primeira tab
+  if (tabs.length) setTab(tabs[0].id);
+
+  // ---- DASHBOARD ----
+  async function carregarDashboard() {
+    try {
+      const res = await reportsApi.dashboard();
+      const d = res.data;
+      document.getElementById('s-usuarios').textContent      = d.usuarios?.total ?? '—';
+      document.getElementById('s-gestores').textContent      = d.usuarios?.porTipo?.gestor ?? '—';
+      document.getElementById('s-colaboradores').textContent = d.usuarios?.porTipo?.colaborador ?? '—';
+      document.getElementById('s-avaliacoes').textContent    = d.avaliacoes?.total ?? '—';
+      document.getElementById('s-media').textContent         = d.avaliacoes?.mediaGeral ? d.avaliacoes.mediaGeral.toFixed(1) + ' ★' : '—';
+      document.getElementById('s-ninebox').textContent       = d.nineBox?.total ?? '—';
+
+      // Distribuição Nine Box
+      const CATEGORIAS = {
+        '1-1': { nome: 'Questão', icon: '❓', bg: '#fee2e2' },
+        '2-1': { nome: 'Trabalhador', icon: '⚙️', bg: '#fef3c7' },
+        '3-1': { nome: 'Âncora', icon: '⚓', bg: '#fef9c3' },
+        '1-2': { nome: 'Dilema', icon: '🤔', bg: '#fef3c7' },
+        '2-2': { nome: 'Núcleo', icon: '💎', bg: '#d1fae5' },
+        '3-2': { nome: 'Especialista', icon: '🎯', bg: '#a7f3d0' },
+        '1-3': { nome: 'Enigma', icon: '🔮', bg: '#fef9c3' },
+        '2-3': { nome: 'Estrela', icon: '⭐', bg: '#a7f3d0' },
+        '3-3': { nome: 'Superstar', icon: '🚀', bg: '#6ee7b7' },
+      };
+      const dist = d.nineBox?.porCategoria || {};
+      const grid = document.getElementById('nb-dist-grid');
+      // Ordem: pot 3→1, perf 1→3
+      let html = '';
+      for (let pot = 3; pot >= 1; pot--) {
+        for (let perf = 1; perf <= 3; perf++) {
+          const key = `${perf}-${pot}`;
+          const cat = CATEGORIAS[key];
+          const count = dist[cat?.nome] || 0;
+          html += `
+            <div class="nb-dist-cell" style="background:${cat?.bg || '#f1f5f9'}">
+              <div style="font-size:16px">${cat?.icon || ''}</div>
+              <div class="nb-dist-count">${count}</div>
+              <div class="nb-dist-label">${cat?.nome || ''}</div>
+            </div>`;
+        }
+      }
+      grid.innerHTML = html;
+    } catch {
+      document.getElementById('dash-stats').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar dashboard.</p></div>`;
+    }
+  }
+
+  // ---- SELECT USUÁRIOS ----
+  async function carregarSelectUsuarios() {
+    const sel = document.getElementById('sel-usuario');
+    try {
+      const res = await usersApi.list({ limit: 200 });
+      const users = res.data.users;
+      sel.innerHTML = '<option value="">Selecione um usuário...</option>' +
+        users.map(u => `<option value="${u.id}">${u.nome} (${u.tipo}) — RA: ${u.ra}</option>`).join('');
+    } catch {
+      sel.innerHTML = '<option value="">Erro ao carregar</option>';
+    }
+  }
+
+  // ---- RELATÓRIO DE USUÁRIO ----
+  window.carregarRelatorioUsuario = async function() {
+    const userId = document.getElementById('sel-usuario').value;
+    if (!userId) { showToast('Selecione um usuário.', 'error'); return; }
+    const container = document.getElementById('rel-usuario-resultado');
+    container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando...</p></div>';
+    try {
+      const res = await reportsApi.user(userId);
+      renderRelatorioUsuario(res.data, container);
+    } catch {
+      container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar relatório.</p></div>';
+    }
+  };
+
+  // ---- MEU RELATÓRIO ----
+  async function carregarMeuRelatorio() {
+    const container = document.getElementById('rel-meu-resultado');
+    try {
+      const res = await reportsApi.user(user.id);
+      renderRelatorioUsuario(res.data, container, true);
+    } catch {
+      container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar seu relatório.</p></div>';
+    }
+  }
+
+  function renderRelatorioUsuario(data, container, isMeu = false) {
+    const u = data.usuario;
+    const iniciais = u.nome.split(' ').slice(0,2).map(p => p[0]).join('').toUpperCase();
+    const avatar = u.foto ? `<img src="${u.foto}" alt="${u.nome}">` : iniciais;
+
+    const TIPO_LABELS = {
+      gestor_para_colaborador: 'Gestor → Colaborador',
+      colaborador_para_gestor: 'Colaborador → Gestor',
+      avaliacao_360: '360°',
+    };
+
+    const avaliacoes = data.avaliacoesRecebidas?.lista || [];
+    const nineBox    = data.nineBox?.ultima;
+
+    const avaliacoesHtml = avaliacoes.length
+      ? avaliacoes.slice(0, 10).map(a => `
+          <div class="rel-av-item">
+            <div class="rel-av-header">
+              <span class="rel-av-tipo ${a.tipoAvaliacao}">${TIPO_LABELS[a.tipoAvaliacao] || a.tipoAvaliacao}</span>
+              <div style="display:flex;gap:8px;align-items:center">
+                ${a.media ? `<span class="rel-av-media">${a.media} ★</span>` : ''}
+                <span class="rel-av-data">${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+              </div>
+            </div>
+            ${a.comentario ? `<p class="rel-av-comentario">"${a.comentario}"</p>` : ''}
+          </div>`).join('')
+      : '<div class="empty-state" style="padding:20px"><i class="fa-solid fa-star"></i><p>Nenhuma avaliação recebida.</p></div>';
+
+    const nineBoxHtml = nineBox
+      ? `<div class="rel-nb-card">
+           <div class="rel-nb-icon">🎯</div>
+           <div>
+             <div class="rel-nb-cat">${nineBox.categoria}</div>
+             <div class="rel-nb-meta">Performance: ${nineBox.performance} | Potencial: ${nineBox.potential} | ${new Date(nineBox.data).toLocaleDateString('pt-BR')}</div>
+             ${nineBox.comentario ? `<div style="font-size:12px;color:var(--text-muted);margin-top:4px;font-style:italic">"${nineBox.comentario}"</div>` : ''}
+           </div>
+         </div>`
+      : '<p style="font-size:13px;color:var(--text-muted)">Nenhuma avaliação Nine Box registrada.</p>';
+
+    container.innerHTML = `
+      <div class="rel-user-card">
+        <div class="rel-user-header">
+          <div class="rel-user-avatar">${avatar}</div>
+          <div>
+            <div class="rel-user-nome">${u.nome}</div>
+            <div class="rel-user-meta">
+              ${u.tipo} · RA: ${u.ra}
+              ${u.cargo ? ` · ${u.cargo}` : ''}
+              ${u.departamento ? ` · ${u.departamento}` : ''}
+            </div>
+          </div>
+          ${!isMeu ? `
+            <button class="btn-exportar" onclick="exportarRelatorio('${u.id}')">
+              <i class="fa-solid fa-download"></i> Exportar
+            </button>` : ''}
+        </div>
+
+        <!-- Stats rápidas -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+          <div class="rel-stat-card" style="flex:1;min-width:120px">
+            <div class="rel-stat-icon"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <div class="rel-stat-val">${data.avaliacoesRecebidas?.total ?? 0}</div>
+              <div class="rel-stat-label">Avaliações recebidas</div>
+            </div>
+          </div>
+          <div class="rel-stat-card" style="flex:1;min-width:120px">
+            <div class="rel-stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+              <div class="rel-stat-val">${data.avaliacoesRecebidas?.mediaGeral ? data.avaliacoesRecebidas.mediaGeral.toFixed(1) + ' ★' : '—'}</div>
+              <div class="rel-stat-label">Média geral</div>
+            </div>
+          </div>
+          <div class="rel-stat-card" style="flex:1;min-width:120px">
+            <div class="rel-stat-icon"><i class="fa-solid fa-paper-plane"></i></div>
+            <div>
+              <div class="rel-stat-val">${data.avaliacoesFeitas?.total ?? 0}</div>
+              <div class="rel-stat-label">Avaliações feitas</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nine Box -->
+        <div class="rel-section-title"><i class="fa-solid fa-th"></i> Posição Nine Box</div>
+        <div style="margin-bottom:20px">${nineBoxHtml}</div>
+
+        <!-- Avaliações recebidas -->
+        <div class="rel-section-title"><i class="fa-solid fa-star"></i> Avaliações Recebidas</div>
+        ${avaliacoesHtml}
+      </div>`;
+  }
+
+  window.exportarRelatorio = async function(userId) {
+    try {
+      const res = await reportsApi.export(userId);
+      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `relatorio-${userId}-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Relatório exportado!', 'success');
+    } catch {}
+  };
+</script>
+</body>
+</html>
+

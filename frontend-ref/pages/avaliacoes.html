@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliações — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/avaliacoes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2 id="av-header-title">Avaliações</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown active" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link active"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link active"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ETAPA 1: SELECAO DO TIPO -->
+  <div class="av-step" id="step-tipo">
+    <div class="av-step-box">
+      <p class="av-step-subtitle">Selecione o tipo de avaliação que deseja criar:</p>
+
+      <div class="av-tipo-cards">
+
+        <div class="av-tipo-card" data-tipo="gestor" id="card-gestor" onclick="selecionarTipo('gestor')">
+          <div class="av-tipo-icon">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+          <span>Avaliação de Gestor</span>
+        </div>
+
+        <div class="av-tipo-card" data-tipo="colaborador" id="card-colaborador" onclick="selecionarTipo('colaborador')">
+          <div class="av-tipo-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <span>Avaliação de Colaborador</span>
+        </div>
+
+        <div class="av-tipo-card" data-tipo="historico" onclick="selecionarTipo('historico')">
+          <div class="av-tipo-icon">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <span>Ver Histórico</span>
+        </div>
+
+      </div>
+
+      <!-- Info anonimato -->
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:12px 16px;font-size:12px;color:#6d28d9;display:flex;gap:8px;align-items:flex-start;max-width:400px;width:100%">
+        <i class="fa-solid fa-user-secret" style="margin-top:1px;flex-shrink:0"></i>
+        <span>Avaliações são <strong>anônimas</strong>. O avaliado não saberá quem o avaliou.</span>
+      </div>
+
+      <div class="av-step-actions">
+        <a href="../index.html" class="av-btn-voltar">Voltar</a>
+        <button class="av-btn-proximo" id="btn-proximo" onclick="irParaFormulario()" disabled>
+          Próximo <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 2: FORMULARIO + HISTORICO -->
+  <div class="av-step" id="step-form" style="display:none">
+    <div class="wrapper av-wrapper">
+
+      <section class="av-form-card">
+
+        <div class="av-field">
+          <label for="avaliado" id="avaliado-label">Selecione quem avaliar</label>
+          <select id="avaliado"><option value="">Carregando...</option></select>
+        </div>
+
+        <!-- Criterios com estrelas -->
+        <div class="av-criterios" id="criterios-gestor">
+          <p class="av-section-title">Critérios de Avaliação</p>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-regular fa-clock"></i> Pontualidade</span>
+            <div class="stars" data-criterio="pontualidade" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-regular fa-comments"></i> Comunicação</span>
+            <div class="stars" data-criterio="comunicacao" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-code"></i> Desempenho Técnico</span>
+            <div class="stars" data-criterio="tecnico" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-bolt"></i> Proatividade</span>
+            <div class="stars" data-criterio="proatividade" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-people-group"></i> Trabalho em Equipe</span>
+            <div class="stars" data-criterio="equipe" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+        </div>
+
+        <div class="av-media-box" id="media-box">
+          <span>Média geral</span>
+          <span class="av-media-valor" id="media-geral">—</span>
+        </div>
+
+        <div class="av-field">
+          <label for="comentario" id="comentario-label">Comentário <span class="av-opcional">(opcional)</span></label>
+          <textarea id="comentario" placeholder="Descreva sua avaliação..." rows="3"></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="av-btn-voltar-form" onclick="voltarParaTipo()">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <button class="av-submit" onclick="enviarAvaliacao()" id="btn-submit" style="flex:1;margin-top:0">
+            <i class="fa-solid fa-paper-plane"></i> <span id="btn-text">Enviar Avaliação</span>
+          </button>
+        </div>
+
+      </section>
+
+      <section class="av-historico-card">
+        <div class="av-historico-header">
+          <p class="av-section-title">Histórico</p>
+          <div class="av-filtros">
+            <button class="av-filtro active" data-filtro="todos" onclick="filtrar('todos')">Todos</button>
+            <button class="av-filtro" data-filtro="recebidas" onclick="filtrar('recebidas')">Recebidas</button>
+            <button class="av-filtro" data-filtro="feitas" onclick="filtrar('feitas')">Feitas por mim</button>
+          </div>
+        </div>
+        <div id="historico-lista">
+          <p class="av-empty">Carregando...</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ETAPA 3: HISTORICO COMPLETO -->
+  <div class="av-step" id="step-historico" style="display:none">
+    <div class="wrapper av-wrapper" style="justify-content:center">
+      <section class="av-historico-card" style="max-width:600px;width:100%">
+        <div class="av-historico-header">
+          <p class="av-section-title">Histórico de Avaliações</p>
+          <div class="av-filtros">
+            <button class="av-filtro active" data-filtro="todos" onclick="filtrarFull('todos')">Todos</button>
+            <button class="av-filtro" data-filtro="recebidas" onclick="filtrarFull('recebidas')">Recebidas</button>
+            <button class="av-filtro" data-filtro="feitas" onclick="filtrarFull('feitas')">Feitas por mim</button>
+          </div>
+        </div>
+        <div id="historico-lista-full">
+          <p class="av-empty">Carregando...</p>
+        </div>
+        <button onclick="voltarParaTipo()" style="margin-top:16px;background:#f1f5f9;color:var(--primary);box-shadow:none">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+      </section>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+  import { requireAuth, getUser, isGestor, isColaborador, isAdmin } from '../js/auth.js';
+  import { usersApi, evaluationsApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  requireAuth();
+
+  const user = getUser();
+  const CRITERIOS = ['pontualidade','comunicacao','tecnico','proatividade','equipe'];
+  const CRITERIOS_LABEL = { pontualidade:'Pontualidade', comunicacao:'Comunicação', tecnico:'Técnico', proatividade:'Proatividade', equipe:'Equipe' };
+  const TIPO_LABELS = { gestor_para_colaborador:'Gestor → Colaborador', colaborador_para_gestor:'Colaborador → Gestor', avaliacao_360:'360°' };
+
+  const notas = { pontualidade:0, comunicacao:0, tecnico:0, proatividade:0, equipe:0 };
+  let tipoSelecionado = null;
+  let filtroAtual = 'todos';
+  let filtroFullAtual = 'todos';
+  let todasAvaliacoes = [];
+
+  // --- Aplica permissões: gestor só avalia colaborador, colaborador só avalia gestor ---
+  function aplicarPermissoes() {
+    const cardGestor      = document.getElementById('card-gestor');
+    const cardColaborador = document.getElementById('card-colaborador');
+    // Gestor: pode avaliar colaborador, não pode avaliar gestor
+    if (isGestor()) {
+      if (cardGestor) cardGestor.style.display = 'none';
+    }
+    // Colaborador: pode avaliar gestor, não pode avaliar colaborador
+    if (isColaborador()) {
+      if (cardColaborador) cardColaborador.style.display = 'none';
+    }
+    // Admin: vê tudo
+  }
+
+  // --- ETAPA 1: seleção ---
+  window.selecionarTipo = function(tipo) {
+    tipoSelecionado = tipo;
+    document.querySelectorAll('.av-tipo-card').forEach(c => c.classList.toggle('selected', c.dataset.tipo === tipo));
+    document.getElementById('btn-proximo').disabled = false;
+  };
+
+  window.irParaFormulario = function() {
+    if (!tipoSelecionado) return;
+    if (tipoSelecionado === 'historico') {
+      document.getElementById('step-tipo').style.display = 'none';
+      document.getElementById('step-historico').style.display = 'flex';
+      document.getElementById('av-header-title').textContent = 'Histórico de Avaliações';
+      carregarHistoricoFull();
+      return;
+    }
+    document.getElementById('step-tipo').style.display = 'none';
+    document.getElementById('step-form').style.display = 'block';
+    document.getElementById('av-header-title').textContent =
+      tipoSelecionado === 'gestor' ? 'Avaliar Gestor' : 'Avaliar Colaborador';
+    carregarAvaliaveis();
+    initStars();
+    carregarHistorico();
+  };
+
+  window.voltarParaTipo = function() {
+    document.getElementById('step-form').style.display = 'none';
+    document.getElementById('step-historico').style.display = 'none';
+    document.getElementById('step-tipo').style.display = 'flex';
+    document.getElementById('av-header-title').textContent = 'Avaliações';
+    tipoSelecionado = null;
+    document.querySelectorAll('.av-tipo-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('btn-proximo').disabled = true;
+  };
+
+  // --- Carrega lista de quem pode ser avaliado ---
+  async function carregarAvaliaveis() {
+    const select = document.getElementById('avaliado');
+    const label  = document.getElementById('avaliado-label');
+    try {
+      let tipo;
+      if (isGestor())       { tipo = 'colaborador'; label.textContent = 'Colaborador'; }
+      else if (isColaborador()) { tipo = 'gestor';  label.textContent = 'Gestor'; }
+      else                  { label.textContent = 'Usuário'; }
+      const params = tipo ? { tipo, limit:100 } : { limit:100 };
+      const res = await usersApi.list(params);
+      const users = res.data.users.filter(u => u.id !== user.id);
+      if (!users.length) { select.innerHTML = '<option value="">Nenhum usuário disponível</option>'; return; }
+      select.innerHTML = '<option value="">Selecione...</option>' +
+        users.map(u => '<option value="' + u.id + '">' + u.nome + ' (RA: ' + u.ra + ')</option>').join('');
+    } catch { select.innerHTML = '<option value="">Erro ao carregar</option>'; }
+  }
+
+  // --- Stars ---
+  function initStars() {
+    document.querySelectorAll('.stars').forEach(group => {
+      const criterio = group.dataset.criterio;
+      const spans = group.querySelectorAll('span');
+      spans.forEach((star, i) => {
+        star.textContent = '\u2605';
+        star.addEventListener('mouseover', () => highlight(spans, i));
+        star.addEventListener('mouseout',  () => highlight(spans, notas[criterio] - 1));
+        star.addEventListener('click', () => { notas[criterio] = i + 1; highlight(spans, i); atualizarMedia(); });
+      });
+    });
+  }
+
+  function highlight(spans, upTo) {
+    spans.forEach((s, i) => s.classList.toggle('active', i <= upTo));
+  }
+
+  function atualizarMedia() {
+    const vals = Object.values(notas).filter(v => v > 0);
+    const box = document.getElementById('media-box');
+    const el  = document.getElementById('media-geral');
+    if (!vals.length) { box.style.display = 'none'; return; }
+    box.style.display = 'flex';
+    el.textContent = (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1) + ' \u2605';
+  }
+
+  // --- Enviar avaliacao ---
+  window.enviarAvaliacao = async function() {
+    const avaliadoId = document.getElementById('avaliado').value;
+    const comentario = document.getElementById('comentario').value.trim();
+    if (!avaliadoId) { showToast('Selecione quem será avaliado.', 'error'); return; }
+    if (!Object.values(notas).some(v => v > 0)) { showToast('Avalie pelo menos um critério.', 'error'); return; }
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    try {
+      await evaluationsApi.create({ avaliadoId, criterios: {...notas}, comentario: comentario || null, anonima: true });
+      showToast('Avaliação enviada com sucesso!', 'success');
+      CRITERIOS.forEach(k => { notas[k] = 0; });
+      document.querySelectorAll('.stars span').forEach(s => s.classList.remove('active'));
+      document.getElementById('avaliado').value = '';
+      document.getElementById('comentario').value = '';
+      document.getElementById('media-box').style.display = 'none';
+      document.getElementById('media-geral').textContent = '—';
+      carregarHistorico();
+    } catch {}
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span id="btn-text">Enviar Avaliação</span>'; }
+  };
+
+  // --- Historico lateral ---
+  async function carregarHistorico() {
+    const container = document.getElementById('historico-lista');
+    container.innerHTML = '<p class="av-empty">Carregando...</p>';
+    try {
+      const res = await evaluationsApi.list({ limit:50 });
+      todasAvaliacoes = res.data.evaluations;
+      renderHistorico();
+    } catch { container.innerHTML = '<p class="av-empty">Erro ao carregar.</p>'; }
+  }
+
+  function renderHistorico() {
+    const container = document.getElementById('historico-lista');
+    let lista = todasAvaliacoes;
+    if (filtroAtual === 'recebidas') lista = lista.filter(a => a.avaliadoId === user.id);
+    if (filtroAtual === 'feitas')    lista = lista.filter(a => a.avaliadorId === user.id);
+    renderLista(lista, container);
+  }
+
+  window.filtrar = function(f) {
+    filtroAtual = f;
+    document.querySelectorAll('#step-form .av-filtro').forEach(b => b.classList.toggle('active', b.dataset.filtro === f));
+    renderHistorico();
+  };
+
+  // --- Historico completo ---
+  async function carregarHistoricoFull() {
+    const container = document.getElementById('historico-lista-full');
+    container.innerHTML = '<p class="av-empty">Carregando...</p>';
+    try {
+      const res = await evaluationsApi.list({ limit:100 });
+      todasAvaliacoes = res.data.evaluations;
+      renderHistoricoFull();
+    } catch { container.innerHTML = '<p class="av-empty">Erro ao carregar.</p>'; }
+  }
+
+  function renderHistoricoFull() {
+    const container = document.getElementById('historico-lista-full');
+    let lista = todasAvaliacoes;
+    if (filtroFullAtual === 'recebidas') lista = lista.filter(a => a.avaliadoId === user.id);
+    if (filtroFullAtual === 'feitas')    lista = lista.filter(a => a.avaliadorId === user.id);
+    renderLista(lista, container);
+  }
+
+  window.filtrarFull = function(f) {
+    filtroFullAtual = f;
+    document.querySelectorAll('#step-historico .av-filtro').forEach(b => b.classList.toggle('active', b.dataset.filtro === f));
+    renderHistoricoFull();
+  };
+
+  // --- Render generico de lista ---
+  function renderLista(lista, container) {
+    if (!lista.length) { container.innerHTML = '<p class="av-empty">Nenhuma avaliação encontrada.</p>'; return; }
+    container.innerHTML = lista.map(a => {
+      const tipoLabel = TIPO_LABELS[a.tipoAvaliacao] || a.tipoAvaliacao;
+      const tipoClass = a.tipoAvaliacao || '';
+      const criteriosBadges = a.criterios
+        ? Object.entries(a.criterios).filter(([,v]) => v > 0)
+            .map(([k,v]) => '<span class="av-criterio-badge">' + (CRITERIOS_LABEL[k]||k) + '<span class="mini-stars">' + '★'.repeat(v) + '</span></span>').join('')
+        : '';
+      return '<div class="av-item">' +
+        '<div class="av-item-header">' +
+          '<span class="av-item-nome">' + (a.avaliado ? a.avaliado.nome : 'Usuário') + '</span>' +
+          '<div class="av-item-meta">' +
+            '<span class="av-item-tipo ' + tipoClass + '">' + tipoLabel + '</span>' +
+            (a.anonima ? '<span style="font-size:11px;background:#f5f3ff;color:#6d28d9;padding:2px 8px;border-radius:100px;font-weight:600"><i class="fa-solid fa-user-secret"></i> Anônima</span>' : '') +
+            '<span class="av-item-data">' + new Date(a.data).toLocaleDateString('pt-BR') + '</span>' +
+          '</div>' +
+        '</div>' +
+        (criteriosBadges ? '<div class="av-item-criterios">' + criteriosBadges + '</div>' : '') +
+        (a.media ? '<div class="av-item-media">Média: ' + a.media + ' ★</div>' : '') +
+        (a.comentario ? '<p class="av-item-comentario">"' + a.comentario + '"</p>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  aplicarPermissoes();
+</script>
+</body>
+</html>
+

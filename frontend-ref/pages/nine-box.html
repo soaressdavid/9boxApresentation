@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nine Box Grid - Portal de Gestao de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nine-box.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2>Nine Box Grid</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown active" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link active"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main class="nb-page">
+
+  <!-- PAINEL ESQUERDO: FORMULÁRIO (apenas gestor/admin) -->
+  <aside class="nb-panel" id="nb-panel">
+
+    <div class="nb-panel-header">
+      <i class="fa-solid fa-sliders"></i>
+      <span>Posicionar Pessoa</span>
+    </div>
+
+    <!-- SELECT PESSOA -->
+    <div class="nb-field">
+      <label id="nb-pessoa-label">Colaborador</label>
+      <select id="nb-pessoa">
+        <option value="">Selecione...</option>
+      </select>
+    </div>
+
+    <!-- PERFORMANCE -->
+    <div class="nb-axis-section">
+      <div class="nb-axis-label">
+        <i class="fa-solid fa-chart-line"></i>
+        Performance
+        <span class="nb-axis-sub">Desempenho atual</span>
+      </div>
+      <div class="nb-axis-btns" id="perf-btns">
+        <button class="nb-axis-btn" data-val="1" onclick="selectAxis('perf',1)">
+          <span class="nb-axis-dot dot-low"></span>Baixo
+        </button>
+        <button class="nb-axis-btn" data-val="2" onclick="selectAxis('perf',2)">
+          <span class="nb-axis-dot dot-mid"></span>Médio
+        </button>
+        <button class="nb-axis-btn" data-val="3" onclick="selectAxis('perf',3)">
+          <span class="nb-axis-dot dot-high"></span>Alto
+        </button>
+      </div>
+    </div>
+
+    <!-- POTENTIAL -->
+    <div class="nb-axis-section">
+      <div class="nb-axis-label">
+        <i class="fa-solid fa-rocket"></i>
+        Potential
+        <span class="nb-axis-sub">Potencial de crescimento</span>
+      </div>
+      <div class="nb-axis-btns" id="pot-btns">
+        <button class="nb-axis-btn" data-val="1" onclick="selectAxis('pot',1)">
+          <span class="nb-axis-dot dot-low"></span>Baixo
+        </button>
+        <button class="nb-axis-btn" data-val="2" onclick="selectAxis('pot',2)">
+          <span class="nb-axis-dot dot-mid"></span>Médio
+        </button>
+        <button class="nb-axis-btn" data-val="3" onclick="selectAxis('pot',3)">
+          <span class="nb-axis-dot dot-high"></span>Alto
+        </button>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="nb-preview" id="nb-preview" style="display:none">
+      <i class="fa-solid fa-location-dot"></i>
+      Categoria: <strong id="nb-preview-cat">—</strong>
+    </div>
+
+    <!-- COMENTÁRIO -->
+    <div class="nb-field">
+      <label>Comentário <span class="nb-opt">(opcional)</span></label>
+      <textarea id="nb-comentario" placeholder="Justifique sua avaliação..." rows="3"></textarea>
+    </div>
+
+    <button class="nb-save-btn" id="btn-salvar-nb" onclick="salvarNB()">
+      <i class="fa-solid fa-floppy-disk"></i> Salvar Posição
+    </button>
+
+  </aside>
+
+  <!-- ÁREA PRINCIPAL: GRID -->
+  <div class="nb-grid-area">
+
+    <div class="nb-grid-controls">
+      <div class="nb-filtros">
+        <button class="nb-filtro active" data-filtro="todos" onclick="filtrarNB('todos')">Todos</button>
+        <button class="nb-filtro" data-filtro="gestor" onclick="filtrarNB('gestor')">Gestores</button>
+        <button class="nb-filtro" data-filtro="colaborador" onclick="filtrarNB('colaborador')">Colaboradores</button>
+      </div>
+      <div class="nb-legend">
+        <span class="nb-legend-item"><span class="nb-legend-dot professor"></span>Gestor</span>
+        <span class="nb-legend-item"><span class="nb-legend-dot estagiario"></span>Colaborador</span>
+      </div>
+    </div>
+
+    <div class="nb-grid-container">
+
+      <!-- Eixo Y -->
+      <div class="nb-axis-y">
+        <span class="nb-axis-title">POTENTIAL</span>
+        <div class="nb-axis-ticks">
+          <span>Alto</span>
+          <span>Médio</span>
+          <span>Baixo</span>
+        </div>
+      </div>
+
+      <!-- Grid + Eixo X -->
+      <div class="nb-grid-wrap">
+        <div class="nb-grid" id="nb-grid">
+
+          <!-- Linha 3: Alto Potential -->
+          <div class="nb-box nb-box-1-3" id="nb-box-1-3" onclick="clickBox(1,3)">
+            <div class="nb-box-header"><span class="nb-box-name">Enigma</span><span class="nb-box-icon">🔮</span></div>
+            <div class="nb-box-people" id="nb-people-1-3"></div>
+          </div>
+          <div class="nb-box nb-box-2-3" id="nb-box-2-3" onclick="clickBox(2,3)">
+            <div class="nb-box-header"><span class="nb-box-name">Estrela</span><span class="nb-box-icon">⭐</span></div>
+            <div class="nb-box-people" id="nb-people-2-3"></div>
+          </div>
+          <div class="nb-box nb-box-3-3" id="nb-box-3-3" onclick="clickBox(3,3)">
+            <div class="nb-box-header"><span class="nb-box-name">Superstar</span><span class="nb-box-icon">🚀</span></div>
+            <div class="nb-box-people" id="nb-people-3-3"></div>
+          </div>
+
+          <!-- Linha 2: Médio Potential -->
+          <div class="nb-box nb-box-1-2" id="nb-box-1-2" onclick="clickBox(1,2)">
+            <div class="nb-box-header"><span class="nb-box-name">Dilema</span><span class="nb-box-icon">🤔</span></div>
+            <div class="nb-box-people" id="nb-people-1-2"></div>
+          </div>
+          <div class="nb-box nb-box-2-2" id="nb-box-2-2" onclick="clickBox(2,2)">
+            <div class="nb-box-header"><span class="nb-box-name">Núcleo</span><span class="nb-box-icon">💎</span></div>
+            <div class="nb-box-people" id="nb-people-2-2"></div>
+          </div>
+          <div class="nb-box nb-box-3-2" id="nb-box-3-2" onclick="clickBox(3,2)">
+            <div class="nb-box-header"><span class="nb-box-name">Especialista</span><span class="nb-box-icon">🎯</span></div>
+            <div class="nb-box-people" id="nb-people-3-2"></div>
+          </div>
+
+          <!-- Linha 1: Baixo Potential -->
+          <div class="nb-box nb-box-1-1" id="nb-box-1-1" onclick="clickBox(1,1)">
+            <div class="nb-box-header"><span class="nb-box-name">Questão</span><span class="nb-box-icon">❓</span></div>
+            <div class="nb-box-people" id="nb-people-1-1"></div>
+          </div>
+          <div class="nb-box nb-box-2-1" id="nb-box-2-1" onclick="clickBox(2,1)">
+            <div class="nb-box-header"><span class="nb-box-name">Trabalhador</span><span class="nb-box-icon">⚙️</span></div>
+            <div class="nb-box-people" id="nb-people-2-1"></div>
+          </div>
+          <div class="nb-box nb-box-3-1" id="nb-box-3-1" onclick="clickBox(3,1)">
+            <div class="nb-box-header"><span class="nb-box-name">Âncora</span><span class="nb-box-icon">⚓</span></div>
+            <div class="nb-box-people" id="nb-people-3-1"></div>
+          </div>
+
+        </div>
+
+        <!-- Eixo X -->
+        <div class="nb-axis-x">
+          <div class="nb-axis-ticks-x">
+            <span>Baixo</span><span>Médio</span><span>Alto</span>
+          </div>
+          <span class="nb-axis-title">PERFORMANCE</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL DE DETALHES -->
+<div class="nb-modal-overlay" id="nb-modal" onclick="fecharModal(event)">
+  <div class="nb-modal">
+    <button class="nb-modal-close" onclick="fecharModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="nb-modal-header" id="nb-modal-header"></div>
+    <div class="nb-modal-body" id="nb-modal-body"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { requireAuth, isGestorOrAdmin, isAdmin, getUser } from '../js/auth.js';
+  import { usersApi, nineBoxApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  requireAuth();
+
+  const user = getUser();
+  let nbPerf = null;
+  let nbPot  = null;
+  let filtroAtual = 'todos';
+  let allNineBoxes = [];
+
+  const CATEGORIAS = {
+    '1-1': { nome: 'Questão',      icon: '❓' },
+    '2-1': { nome: 'Trabalhador',  icon: '⚙️' },
+    '3-1': { nome: 'Âncora',       icon: '⚓' },
+    '1-2': { nome: 'Dilema',       icon: '🤔' },
+    '2-2': { nome: 'Núcleo',       icon: '💎' },
+    '3-2': { nome: 'Especialista', icon: '🎯' },
+    '1-3': { nome: 'Enigma',       icon: '🔮' },
+    '2-3': { nome: 'Estrela',      icon: '⭐' },
+    '3-3': { nome: 'Superstar',    icon: '🚀' },
+  };
+  const PERF_LABELS = { 1:'Baixo', 2:'Médio', 3:'Alto' };
+
+  // Oculta painel de formulário para colaboradores
+  if (!isGestorOrAdmin()) {
+    document.getElementById('nb-panel').style.display = 'none';
+  }
+
+  async function carregarPessoas() {
+    const select = document.getElementById('nb-pessoa');
+    try {
+      const res = await usersApi.list({ limit: 200 });
+      const users = res.data.users.filter(u => u.id !== user.id);
+      if (!users.length) { select.innerHTML = '<option value="">Nenhum usuário disponível</option>'; return; }
+      select.innerHTML = '<option value="">Selecione...</option>' +
+        users.map(u => `<option value="${u.id}" data-tipo="${u.tipo}">${u.nome} (${u.tipo}) — RA: ${u.ra}</option>`).join('');
+    } catch { select.innerHTML = '<option value="">Erro ao carregar</option>'; }
+  }
+
+  async function carregarGrid() {
+    try {
+      const res = await nineBoxApi.list({ limit: 200 });
+      allNineBoxes = res.data.nineBoxes;
+      renderGrid();
+    } catch {}
+  }
+
+  function renderGrid() {
+    for (let p = 1; p <= 3; p++) {
+      for (let pt = 1; pt <= 3; pt++) {
+        const el = document.getElementById(`nb-people-${p}-${pt}`);
+        if (el) el.innerHTML = '';
+      }
+    }
+
+    let lista = allNineBoxes;
+    if (filtroAtual !== 'todos') lista = lista.filter(nb => nb.pessoa?.tipo === filtroAtual);
+
+    lista.forEach(nb => {
+      const container = document.getElementById(`nb-people-${nb.performance}-${nb.potential}`);
+      if (!container) return;
+      const tipo = nb.pessoa?.tipo || 'colaborador';
+      const chipClass = tipo === 'gestor' ? 'professor' : 'estagiario';
+      const chip = document.createElement('div');
+      chip.className = `nb-chip ${chipClass}`;
+      chip.innerHTML = `<span class="nb-chip-dot"></span><span class="nb-chip-name">${nb.pessoa?.nome || 'Pessoa'}</span>`;
+      chip.title = `${nb.pessoa?.nome} — ${nb.categoria}`;
+      chip.addEventListener('click', (e) => { e.stopPropagation(); abrirModal(nb); });
+      container.appendChild(chip);
+    });
+  }
+
+  window.selectAxis = function(axis, val) {
+    if (axis === 'perf') {
+      nbPerf = val;
+      document.querySelectorAll('#perf-btns .nb-axis-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === val));
+    } else {
+      nbPot = val;
+      document.querySelectorAll('#pot-btns .nb-axis-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === val));
+    }
+    atualizarPreview();
+    destacarBox();
+  };
+
+  function atualizarPreview() {
+    const preview = document.getElementById('nb-preview');
+    const catEl   = document.getElementById('nb-preview-cat');
+    if (nbPerf && nbPot) {
+      const cat = CATEGORIAS[`${nbPerf}-${nbPot}`];
+      catEl.textContent = `${cat.icon} ${cat.nome}`;
+      preview.style.display = 'flex';
+    } else {
+      preview.style.display = 'none';
+    }
+  }
+
+  function destacarBox() {
+    document.querySelectorAll('.nb-box').forEach(b => b.classList.remove('highlight'));
+    if (nbPerf && nbPot) document.getElementById(`nb-box-${nbPerf}-${nbPot}`)?.classList.add('highlight');
+  }
+
+  window.clickBox = function(perf, pot) {
+    if (!isGestorOrAdmin()) return;
+    nbPerf = perf; nbPot = pot;
+    document.querySelectorAll('#perf-btns .nb-axis-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === perf));
+    document.querySelectorAll('#pot-btns .nb-axis-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === pot));
+    atualizarPreview();
+    destacarBox();
+    const cat = CATEGORIAS[`${perf}-${pot}`];
+    showToast(`Posição: ${cat.icon} ${cat.nome}. Selecione a pessoa e clique em Salvar.`, 'info');
+  };
+
+  window.salvarNB = async function() {
+    const pessoaId   = document.getElementById('nb-pessoa').value;
+    const comentario = document.getElementById('nb-comentario').value.trim();
+    if (!pessoaId) { showToast('Selecione um colaborador.', 'error'); return; }
+    if (!nbPerf)   { showToast('Selecione o nível de Performance.', 'error'); return; }
+    if (!nbPot)    { showToast('Selecione o nível de Potential.', 'error'); return; }
+
+    const btn = document.getElementById('btn-salvar-nb');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+    try {
+      await nineBoxApi.create({ pessoaId, performance: nbPerf, potential: nbPot, comentario: comentario || null });
+      showToast('Posição salva no Nine Box!', 'success');
+      document.getElementById('nb-pessoa').value = '';
+      document.getElementById('nb-comentario').value = '';
+      nbPerf = null; nbPot = null;
+      document.querySelectorAll('.nb-axis-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.nb-box').forEach(b => b.classList.remove('highlight'));
+      document.getElementById('nb-preview').style.display = 'none';
+      carregarGrid();
+    } catch {}
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Posição'; }
+  };
+
+  window.filtrarNB = function(filtro) {
+    filtroAtual = filtro;
+    document.querySelectorAll('.nb-filtro').forEach(b => b.classList.toggle('active', b.dataset.filtro === filtro));
+    renderGrid();
+  };
+
+  function abrirModal(nb) {
+    const cat = CATEGORIAS[`${nb.performance}-${nb.potential}`];
+    document.getElementById('nb-modal-header').innerHTML = `
+      <h4>${nb.pessoa?.nome || 'Pessoa'}</h4>
+      <span class="nb-modal-cat">${cat.icon} ${cat.nome}</span>`;
+    document.getElementById('nb-modal-body').innerHTML = `
+      <div class="nb-modal-row"><span>Tipo</span><span>${nb.pessoa?.tipo || '—'}</span></div>
+      <div class="nb-modal-row"><span>Performance</span><span>${PERF_LABELS[nb.performance]}</span></div>
+      <div class="nb-modal-row"><span>Potential</span><span>${PERF_LABELS[nb.potential]}</span></div>
+      <div class="nb-modal-row"><span>Data</span><span>${new Date(nb.data).toLocaleDateString('pt-BR')}</span></div>
+      ${nb.comentario ? `<div class="nb-modal-comentario">"${nb.comentario}"</div>` : ''}
+      ${isGestorOrAdmin() ? `
+        <div class="nb-modal-actions">
+          <button class="nb-modal-btn remove" onclick="deletarNB('${nb.id}')">
+            <i class="fa-solid fa-trash"></i> Remover
+          </button>
+        </div>` : ''}`;
+    document.getElementById('nb-modal').classList.add('open');
+  }
+
+  window.fecharModal = function(e) {
+    if (!e || e.target === document.getElementById('nb-modal')) {
+      document.getElementById('nb-modal').classList.remove('open');
+    }
+  };
+
+  window.deletarNB = async function(id) {
+    if (!confirm('Remover esta avaliação Nine Box?')) return;
+    try {
+      await nineBoxApi.delete(id);
+      showToast('Removido do Nine Box.', 'success');
+      document.getElementById('nb-modal').classList.remove('open');
+      carregarGrid();
+    } catch {}
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('nb-modal').classList.remove('open');
+  });
+
+  if (isGestorOrAdmin()) carregarPessoas();
+  carregarGrid();
+</script>
+</body>
+</html>
+
+

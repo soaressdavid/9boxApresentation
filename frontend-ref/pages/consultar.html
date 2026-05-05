@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultar — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .pg-wrapper { align-items: flex-start; padding: 32px 20px; }
+    .pg-card-wide {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 28px;
+      width: 100%;
+      max-width: 900px;
+      border: 1.5px solid var(--border);
+    }
+    .pg-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .pg-filtros { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pg-filtro {
+      padding: 7px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0;
+      width: auto;
+    }
+    .pg-filtro.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: none; transform: none; }
+    .pg-filtro:hover:not(.active) { border-color: var(--primary-light); color: var(--primary); background: #eff6ff; transform: none; box-shadow: none; }
+    .pg-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      flex: 1;
+      min-width: 200px;
+    }
+    .pg-search-wrap i { color: var(--text-muted); font-size: 13px; }
+    .pg-search-wrap input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      width: 100%;
+      outline: none;
+    }
+    .pg-search-wrap input::placeholder { color: var(--text-muted); }
+    .pg-ra-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      min-width: 180px;
+    }
+    .pg-ra-search input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      width: 100%;
+      outline: none;
+    }
+    .pg-ra-search button {
+      margin: 0;
+      width: auto;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+    /* Lista de pessoas */
+    .pessoa-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      background: var(--surface);
+    }
+    .pessoa-item:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+    .pessoa-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .pessoa-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .pessoa-info { flex: 1; min-width: 0; }
+    .pessoa-nome { font-size: 15px; font-weight: 600; color: var(--text); }
+    .pessoa-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .pessoa-ra { font-size: 11px; background: #f1f5f9; color: var(--text-muted); padding: 2px 8px; border-radius: 100px; font-weight: 600; }
+    .pessoa-actions { display: flex; gap: 8px; }
+    .btn-ver {
+      padding: 6px 14px;
+      font-size: 12px;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin: 0;
+      width: auto;
+      font-weight: 600;
+    }
+    .btn-ver:hover { background: #dbeafe; transform: none; box-shadow: none; }
+    .btn-del {
+      padding: 6px 10px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin: 0;
+      width: auto;
+    }
+    .btn-del:hover { background: #fee2e2; transform: none; box-shadow: none; }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      width: 100%;
+      max-width: 420px;
+      animation: dropdownIn 0.2s ease;
+    }
+    .modal-box h4 { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+    .modal-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .modal-row:last-of-type { border-bottom: none; }
+    .modal-row span:first-child { color: var(--text-muted); font-weight: 500; }
+    .modal-row span:last-child { font-weight: 600; color: var(--text); }
+    .modal-close { margin-top: 16px; }
+    body.dark-mode .pg-card-wide,
+    body.dark-mode .pessoa-item,
+    body.dark-mode .modal-box { background: #1e293b; }
+    body.dark-mode .pg-search-wrap,
+    body.dark-mode .pg-ra-search { background: #0f172a; border-color: #334155; }
+    body.dark-mode .pg-search-wrap input,
+    body.dark-mode .pg-ra-search input { color: #f1f5f9; }
+    body.dark-mode .pessoa-ra { background: #334155; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Consultar Usuários</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()" title="Modo escuro"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link active"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main class="wrapper pg-wrapper">
+  <div class="pg-card-wide">
+
+    <div class="pg-toolbar">
+      <div class="pg-filtros">
+        <button class="pg-filtro active" data-filtro="todos" onclick="filtrar('todos')">Todos</button>
+        <button class="pg-filtro" data-filtro="gestor" onclick="filtrar('gestor')">Gestores</button>
+        <button class="pg-filtro" data-filtro="colaborador" onclick="filtrar('colaborador')">Colaboradores</button>
+      </div>
+      <div class="pg-search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="busca-nome" placeholder="Buscar por nome..." oninput="buscarPorNome()">
+      </div>
+      <div class="pg-ra-search">
+        <i class="fa-solid fa-id-card" style="color:var(--text-muted);font-size:13px"></i>
+        <input type="text" id="busca-ra" placeholder="Buscar por RA..." maxlength="10">
+        <button onclick="buscarPorRA()"><i class="fa-solid fa-search"></i></button>
+      </div>
+    </div>
+
+    <div id="lista-pessoas">
+      <div class="empty-state">
+        <i class="fa-solid fa-users"></i>
+        <p>Carregando usuários...</p>
+      </div>
+    </div>
+
+    <!-- Paginação -->
+    <div id="paginacao" style="display:none; margin-top:16px; display:flex; gap:8px; justify-content:center; align-items:center;">
+      <button id="btn-prev" onclick="mudarPagina(-1)" style="width:auto;padding:6px 14px;margin:0;font-size:13px">← Anterior</button>
+      <span id="pag-info" style="font-size:13px;color:var(--text-muted)"></span>
+      <button id="btn-next" onclick="mudarPagina(1)" style="width:auto;padding:6px 14px;margin:0;font-size:13px">Próxima →</button>
+    </div>
+
+  </div>
+</main>
+
+<!-- Modal de detalhes -->
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal-box">
+    <h4 id="modal-nome">Detalhes do Usuário</h4>
+    <div id="modal-body"></div>
+    <button class="modal-close" onclick="fecharModal()">Fechar</button>
+  </div>
+</div>
+
+<script type="module">
+  import { requireRole, isAdmin } from '../js/auth.js';
+  import { usersApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  requireRole('gestorOrAdmin');
+
+  let paginaAtual = 1;
+  let filtroAtual = 'todos';
+  let totalPaginas = 1;
+
+  async function carregarUsuarios(page = 1) {
+    paginaAtual = page;
+    const params = { page, limit: 10 };
+    if (filtroAtual !== 'todos') params.tipo = filtroAtual;
+
+    const busca = document.getElementById('busca-nome').value.trim();
+    if (busca) params.search = busca;
+
+    try {
+      const res = await usersApi.list(params);
+      const { users, pagination } = res.data;
+      totalPaginas = pagination.totalPages;
+      renderLista(users);
+      renderPaginacao(pagination);
+    } catch {
+      document.getElementById('lista-pessoas').innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Erro ao carregar usuários.</p>
+        </div>`;
+    }
+  }
+
+  function renderLista(users) {
+    const container = document.getElementById('lista-pessoas');
+    if (!users.length) {
+      container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-users"></i><p>Nenhum usuário encontrado.</p></div>`;
+      return;
+    }
+
+    const tipoLabels = { admin: 'Administrador', gestor: 'Gestor', colaborador: 'Colaborador' };
+    const tipoBadge  = { admin: 'badge-admin', gestor: 'badge-gestor', colaborador: 'badge-colaborador' };
+
+    container.innerHTML = users.map(u => {
+      const iniciais = u.nome.split(' ').slice(0,2).map(p => p[0]).join('').toUpperCase();
+      const avatar = u.foto
+        ? `<img src="${u.foto}" alt="${u.nome}">`
+        : iniciais;
+
+      return `
+        <div class="pessoa-item">
+          <div class="pessoa-avatar">${avatar}</div>
+          <div class="pessoa-info">
+            <div class="pessoa-nome">${u.nome}</div>
+            <div class="pessoa-meta">
+              <span>${u.email}</span>
+              ${u.cargo ? `<span>${u.cargo}</span>` : ''}
+              ${u.departamento ? `<span>${u.departamento}</span>` : ''}
+            </div>
+            <div style="margin-top:4px;display:flex;gap:6px;align-items:center">
+              <span class="badge ${tipoBadge[u.tipo]}">${tipoLabels[u.tipo]}</span>
+              <span class="pessoa-ra">RA: ${u.ra}</span>
+            </div>
+          </div>
+          <div class="pessoa-actions">
+            <button class="btn-ver" onclick="verDetalhes('${u.id}')"><i class="fa-solid fa-eye"></i> Ver</button>
+            ${isAdmin() && u.tipo !== 'admin' ? `<button class="btn-del" onclick="deletarUsuario('${u.id}','${u.nome}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderPaginacao(pagination) {
+    const div = document.getElementById('paginacao');
+    const info = document.getElementById('pag-info');
+    const prev = document.getElementById('btn-prev');
+    const next = document.getElementById('btn-next');
+
+    if (pagination.totalPages <= 1) { div.style.display = 'none'; return; }
+    div.style.display = 'flex';
+    info.textContent = `Página ${pagination.page} de ${pagination.totalPages}`;
+    prev.disabled = pagination.page <= 1;
+    next.disabled = pagination.page >= pagination.totalPages;
+  }
+
+  window.filtrar = function(tipo) {
+    filtroAtual = tipo;
+    document.querySelectorAll('.pg-filtro').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filtro === tipo);
+    });
+    carregarUsuarios(1);
+  };
+
+  window.buscarPorNome = function() {
+    clearTimeout(window._searchTimer);
+    window._searchTimer = setTimeout(() => carregarUsuarios(1), 400);
+  };
+
+  window.buscarPorRA = async function() {
+    const ra = document.getElementById('busca-ra').value.trim();
+    if (!ra) { carregarUsuarios(1); return; }
+    try {
+      const res = await usersApi.getByRA(ra);
+      renderLista([res.data]);
+      document.getElementById('paginacao').style.display = 'none';
+    } catch {
+      // Erro já exibido
+    }
+  };
+
+  window.mudarPagina = function(delta) {
+    const nova = paginaAtual + delta;
+    if (nova >= 1 && nova <= totalPaginas) carregarUsuarios(nova);
+  };
+
+  window.verDetalhes = async function(id) {
+    try {
+      const res = await usersApi.getById(id);
+      const u = res.data;
+      const tipoLabels = { admin: 'Administrador', gestor: 'Gestor', colaborador: 'Colaborador' };
+      document.getElementById('modal-nome').textContent = u.nome;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="modal-row"><span>RA</span><span>${u.ra}</span></div>
+        <div class="modal-row"><span>E-mail</span><span>${u.email}</span></div>
+        <div class="modal-row"><span>Tipo</span><span>${tipoLabels[u.tipo]}</span></div>
+        <div class="modal-row"><span>Cargo</span><span>${u.cargo || '—'}</span></div>
+        <div class="modal-row"><span>Departamento</span><span>${u.departamento || '—'}</span></div>
+        <div class="modal-row"><span>Cadastrado em</span><span>${new Date(u.createdAt).toLocaleDateString('pt-BR')}</span></div>
+      `;
+      document.getElementById('modal-usuario').classList.add('open');
+    } catch {}
+  };
+
+  window.fecharModal = function() {
+    document.getElementById('modal-usuario').classList.remove('open');
+  };
+
+  window.deletarUsuario = async function(id, nome) {
+    if (!confirm(`Deletar o usuário "${nome}"? Esta ação não pode ser desfeita.`)) return;
+    try {
+      await usersApi.delete(id);
+      showToast(`${nome} removido com sucesso.`, 'success');
+      carregarUsuarios(paginaAtual);
+    } catch {}
+  };
+
+  // Fechar modal clicando fora
+  document.getElementById('modal-usuario').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) window.fecharModal();
+  });
+
+  carregarUsuarios();
+</script>
+</body>
+</html>
+

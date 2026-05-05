@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { background: var(--bg); }
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 400px;
+      border: 1.5px solid var(--border);
+    }
+    .login-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .login-logo i {
+      font-size: 40px;
+      color: var(--primary-light);
+    }
+    .login-logo h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+    }
+    .login-logo p {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .login-field {
+      margin-bottom: 16px;
+    }
+    .login-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .login-field .input-wrap {
+      position: relative;
+    }
+    .login-field .input-wrap i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .login-field input {
+      width: 100%;
+      padding: 11px 14px 11px 38px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+      outline: none;
+      background: var(--surface);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .login-btn:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30, 58, 138, 0.25); }
+    .login-info {
+      margin-top: 20px;
+      padding: 12px 14px;
+      background: #eff6ff;
+      border-radius: var(--radius-sm);
+      border: 1px solid #bfdbfe;
+      font-size: 12px;
+      color: #1e40af;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .login-info i { margin-top: 1px; flex-shrink: 0; }
+    body.dark-mode .login-card { background: #1e293b; }
+    body.dark-mode .login-field input { background: #0f172a; color: #f1f5f9; border-color: #334155; }
+    body.dark-mode .login-info { background: #1e3a5f; border-color: #1e40af; color: #93c5fd; }
+  </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="fa-solid fa-people-group"></i>
+      <h1>Portal de Gestão de Pessoas</h1>
+      <p>Acesse com seu e-mail institucional</p>
+    </div>
+
+    <div class="login-field">
+      <label for="login-email">E-mail institucional</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="login-email" placeholder="nome@faculdade.edu.br" autocomplete="email">
+      </div>
+      <!-- Erro inline injetado aqui pelo JS -->
+    </div>
+
+    <div class="login-field">
+      <label for="login-senha">Senha</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="login-senha" placeholder="Sua senha" autocomplete="current-password">
+      </div>
+    </div>
+
+    <button class="login-btn" id="btn-login" onclick="fazerLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> Entrar
+    </button>
+
+    <div class="login-info">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Apenas usuários cadastrados pelo administrador podem acessar o sistema.</span>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { usersApi } from '../js/api.js';
+  import { setToken, setUser, isLoggedIn } from '../js/auth.js';
+  import { validateLoginForm } from '../js/validators.js';
+  import { showToast } from '../js/components/toast.js';
+
+  // Se já logado, redireciona
+  if (isLoggedIn()) {
+    window.location.href = '../index.html';
+  }
+
+  window.fazerLogin = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-senha').value;
+
+    if (!validateLoginForm({ email, senha })) return;
+
+    const btn = document.getElementById('btn-login');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Entrando...';
+
+    try {
+      const res = await usersApi.login({ email, senha });
+      setToken(res.data.token);
+      setUser(res.data.user);
+      window.location.href = '../index.html';
+    } catch (err) {
+      // Erro já exibido pelo api.js via toast
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar';
+    }
+  };
+
+  // Enter para logar
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') window.fazerLogin();
+  });
+</script>
+</body>
+</html>

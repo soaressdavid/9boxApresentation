@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil — Portal de Gestão de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .pf-wrapper { align-items: flex-start; padding: 32px 20px; justify-content: center; }
+    .pf-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; width: 100%; max-width: 860px; }
+    @media (max-width: 768px) { .pf-layout { grid-template-columns: 1fr; } }
+
+    /* Card lateral */
+    .pf-sidebar {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow-md); padding: 28px 24px;
+      border: 1.5px solid var(--border); text-align: center;
+    }
+    .pf-foto-wrap { position: relative; display: inline-block; margin-bottom: 16px; cursor: pointer; }
+    .pf-foto-preview {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 32px; font-weight: 700;
+      overflow: hidden; position: relative; margin: 0 auto;
+    }
+    .pf-foto-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .pf-foto-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s; color: white; font-size: 18px;
+    }
+    .pf-foto-wrap:hover .pf-foto-overlay { opacity: 1; }
+    .pf-nome { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .pf-tipo-badge {
+      display: inline-flex; align-items: center; padding: 4px 12px;
+      border-radius: 100px; font-size: 12px; font-weight: 600; margin-bottom: 16px;
+    }
+    .pf-tipo-badge.admin       { background: #fef3c7; color: #92400e; }
+    .pf-tipo-badge.gestor      { background: #dbeafe; color: #1e40af; }
+    .pf-tipo-badge.colaborador { background: #dcfce7; color: #166534; }
+
+    .pf-stats { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .pf-stat {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; background: #f8fafc; border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+    .pf-stat-label { color: var(--text-muted); }
+    .pf-stat-val { font-weight: 700; color: var(--primary); }
+
+    /* Card principal */
+    .pf-main {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow-md); padding: 28px;
+      border: 1.5px solid var(--border);
+    }
+
+    /* Tabs */
+    .pf-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+    .pf-tab {
+      padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; border: none; background: transparent; font-family: inherit;
+      transition: all 0.2s; margin: 0; width: auto; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; display: flex; align-items: center; gap: 6px;
+    }
+    .pf-tab:hover { color: var(--primary); transform: none; box-shadow: none; }
+    .pf-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .pf-tab-content { display: none; }
+    .pf-tab-content.active { display: block; }
+
+    /* Campos */
+    .pf-field { margin-bottom: 16px; }
+    .pf-field label { display: block; font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+    .pf-field input {
+      width: 100%; padding: 11px 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); font-size: 14px; font-family: inherit;
+      color: var(--text); background: #fafafa; transition: border-color 0.2s;
+    }
+    .pf-field input:focus { border-color: var(--primary-light); outline: none; background: var(--surface); }
+    .pf-field input:disabled { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+
+    .pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .pf-row { grid-template-columns: 1fr; } }
+
+    .pf-btn {
+      padding: 12px 24px; background: var(--primary); color: white; border: none;
+      border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 0.2s; margin-top: 8px; width: auto;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .pf-btn:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,138,0.25); }
+
+    /* Avaliações recebidas */
+    .pf-av-item {
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      padding: 12px 14px; margin-bottom: 10px;
+    }
+    .pf-av-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .pf-av-tipo { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
+    .pf-av-tipo.gestor_para_colaborador { background: #dbeafe; color: #1e40af; }
+    .pf-av-tipo.colaborador_para_gestor { background: #dcfce7; color: #166534; }
+    .pf-av-tipo.avaliacao_360 { background: #fef3c7; color: #92400e; }
+    .pf-av-media { font-size: 14px; font-weight: 700; color: var(--primary); }
+    .pf-av-data { font-size: 11px; color: var(--text-muted); }
+    .pf-av-comentario { font-size: 13px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+    .anonimo-badge { font-size: 11px; background: #f5f3ff; color: #6d28d9; padding: 2px 8px; border-radius: 100px; font-weight: 600; }
+
+    body.dark-mode .pf-sidebar,
+    body.dark-mode .pf-main { background: #1e293b; }
+    body.dark-mode .pf-stat { background: #0f172a; }
+    body.dark-mode .pf-field input { background: #0f172a; color: #f1f5f9; border-color: #334155; }
+    body.dark-mode .pf-field input:disabled { background: #1e293b; }
+    body.dark-mode .pf-av-item { border-color: #334155; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Meu Perfil</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="pages/cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="pages/consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="pages/avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="pages/nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="pages/competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="pages/avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="pages/avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="pages/relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="perfil.html" class="navbar-link active"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main class="wrapper pf-wrapper">
+  <div class="pf-layout">
+
+    <!-- Sidebar -->
+    <div class="pf-sidebar">
+      <div class="pf-foto-wrap" onclick="document.getElementById('input-foto').click()" title="Trocar foto">
+        <div class="pf-foto-preview" id="pf-foto">
+          <span id="pf-iniciais">?</span>
+          <div class="pf-foto-overlay"><i class="fa-solid fa-camera"></i></div>
+        </div>
+      </div>
+      <input type="file" id="input-foto" accept="image/*" style="display:none" onchange="trocarFoto(this)">
+
+      <div class="pf-nome" id="pf-nome-display">Carregando...</div>
+      <span class="pf-tipo-badge" id="pf-tipo-badge"></span>
+
+      <div class="pf-stats" id="pf-stats">
+        <div class="pf-stat">
+          <span class="pf-stat-label">RA</span>
+          <span class="pf-stat-val" id="stat-ra">—</span>
+        </div>
+        <div class="pf-stat">
+          <span class="pf-stat-label">Avaliações recebidas</span>
+          <span class="pf-stat-val" id="stat-avaliacoes">—</span>
+        </div>
+        <div class="pf-stat">
+          <span class="pf-stat-label">Média geral</span>
+          <span class="pf-stat-val" id="stat-media">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="pf-main">
+      <div class="pf-tabs">
+        <button class="pf-tab active" data-tab="dados" onclick="setTab('dados')">
+          <i class="fa-solid fa-user-pen"></i> Dados
+        </button>
+        <button class="pf-tab" data-tab="avaliacoes" onclick="setTab('avaliacoes')">
+          <i class="fa-solid fa-star"></i> Avaliações recebidas
+        </button>
+        <button class="pf-tab" data-tab="senha" onclick="setTab('senha')">
+          <i class="fa-solid fa-lock"></i> Senha
+        </button>
+      </div>
+
+      <!-- Tab: Dados -->
+      <div class="pf-tab-content active" id="tab-dados">
+        <div class="pf-field">
+          <label>Nome completo</label>
+          <input type="text" id="pf-nome" placeholder="Seu nome">
+        </div>
+        <div class="pf-field">
+          <label>E-mail</label>
+          <input type="email" id="pf-email" disabled>
+        </div>
+        <div class="pf-row">
+          <div class="pf-field">
+            <label>Cargo</label>
+            <input type="text" id="pf-cargo" placeholder="Seu cargo">
+          </div>
+          <div class="pf-field">
+            <label>Departamento</label>
+            <input type="text" id="pf-departamento" placeholder="Seu departamento">
+          </div>
+        </div>
+        <button class="pf-btn" id="btn-salvar-perfil" onclick="salvarPerfil()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar alterações
+        </button>
+      </div>
+
+      <!-- Tab: Avaliações -->
+      <div class="pf-tab-content" id="tab-avaliacoes">
+        <div id="pf-avaliacoes-lista">
+          <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando...</p></div>
+        </div>
+      </div>
+
+      <!-- Tab: Senha -->
+      <div class="pf-tab-content" id="tab-senha">
+        <div class="pf-field">
+          <label for="pf-senha-nova">Nova senha</label>
+          <input type="password" id="pf-senha-nova" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        </div>
+        <div class="pf-field">
+          <label for="pf-senha-confirmar">Confirmar nova senha</label>
+          <input type="password" id="pf-senha-confirmar" placeholder="Repita a nova senha" autocomplete="new-password">
+        </div>
+        <button class="pf-btn" id="btn-salvar-senha" onclick="salvarSenha()">
+          <i class="fa-solid fa-lock"></i> Alterar senha
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script type="module">
+  import { requireAuth, getUser, setUser } from './js/auth.js';
+  import { usersApi, evaluationsApi, reportsApi } from './js/api.js';
+  import { showToast } from './js/components/toast.js';
+  import './js/navbar.js';
+
+  requireAuth();
+
+  const user = getUser();
+  let perfilAtual = null;
+
+  const TIPO_LABELS = { admin: 'Administrador', gestor: 'Gestor', colaborador: 'Colaborador' };
+  const TIPO_AV_LABELS = {
+    gestor_para_colaborador: 'Gestor → Colaborador',
+    colaborador_para_gestor: 'Colaborador → Gestor',
+    avaliacao_360: '360°',
+  };
+
+  async function carregarPerfil() {
+    try {
+      const res = await usersApi.getProfile();
+      perfilAtual = res.data;
+      renderPerfil(perfilAtual);
+    } catch {}
+  }
+
+  function renderPerfil(u) {
+    // Sidebar
+    const iniciais = u.nome.split(' ').slice(0,2).map(p => p[0]).join('').toUpperCase();
+    const fotoEl = document.getElementById('pf-foto');
+    if (u.foto) {
+      fotoEl.innerHTML = `<img src="${u.foto}" alt="${u.nome}"><div class="pf-foto-overlay"><i class="fa-solid fa-camera"></i></div>`;
+    } else {
+      document.getElementById('pf-iniciais').textContent = iniciais;
+    }
+
+    document.getElementById('pf-nome-display').textContent = u.nome;
+    const badge = document.getElementById('pf-tipo-badge');
+    badge.textContent = TIPO_LABELS[u.tipo] || u.tipo;
+    badge.className = `pf-tipo-badge ${u.tipo}`;
+
+    document.getElementById('stat-ra').textContent = u.ra || '—';
+
+    // Campos editáveis
+    document.getElementById('pf-nome').value         = u.nome || '';
+    document.getElementById('pf-email').value        = u.email || '';
+    document.getElementById('pf-cargo').value        = u.cargo || '';
+    document.getElementById('pf-departamento').value = u.departamento || '';
+  }
+
+  async function carregarAvaliacoes() {
+    const container = document.getElementById('pf-avaliacoes-lista');
+    try {
+      const res = await reportsApi.user(user.id);
+      const avaliacoes = res.data.avaliacoesRecebidas?.lista || [];
+
+      // Stats
+      document.getElementById('stat-avaliacoes').textContent = res.data.avaliacoesRecebidas?.total ?? 0;
+      const media = res.data.avaliacoesRecebidas?.mediaGeral;
+      document.getElementById('stat-media').textContent = media ? media.toFixed(1) + ' ★' : '—';
+
+      if (!avaliacoes.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-star"></i><p>Nenhuma avaliação recebida ainda.</p></div>';
+        return;
+      }
+
+      container.innerHTML = avaliacoes.map(a => `
+        <div class="pf-av-item">
+          <div class="pf-av-header">
+            <span class="pf-av-tipo ${a.tipoAvaliacao}">${TIPO_AV_LABELS[a.tipoAvaliacao] || a.tipoAvaliacao}</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              ${a.anonima ? '<span class="anonimo-badge"><i class="fa-solid fa-user-secret"></i> Anônima</span>' : ''}
+              ${a.media ? `<span class="pf-av-media">${a.media} ★</span>` : ''}
+              <span class="pf-av-data">${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+            </div>
+          </div>
+          ${a.comentario ? `<p class="pf-av-comentario">"${a.comentario}"</p>` : ''}
+        </div>`).join('');
+    } catch {
+      container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar avaliações.</p></div>';
+    }
+  }
+
+  window.setTab = function(tab) {
+    document.querySelectorAll('.pf-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+    document.querySelectorAll('.pf-tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`tab-${tab}`)?.classList.add('active');
+    if (tab === 'avaliacoes') carregarAvaliacoes();
+  };
+
+  window.trocarFoto = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const foto = e.target.result;
+      const fotoEl = document.getElementById('pf-foto');
+      fotoEl.innerHTML = `<img src="${foto}" alt="Foto"><div class="pf-foto-overlay"><i class="fa-solid fa-camera"></i></div>`;
+      try {
+        const res = await usersApi.updateProfile({ foto });
+        setUser({ ...user, foto });
+        showToast('Foto atualizada!', 'success');
+      } catch {}
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.salvarPerfil = async function() {
+    const nome         = document.getElementById('pf-nome').value.trim();
+    const cargo        = document.getElementById('pf-cargo').value.trim();
+    const departamento = document.getElementById('pf-departamento').value.trim();
+
+    if (!nome || nome.length < 3) { showToast('Nome deve ter pelo menos 3 caracteres.', 'error'); return; }
+
+    const btn = document.getElementById('btn-salvar-perfil');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+    try {
+      const res = await usersApi.updateProfile({ nome, cargo, departamento });
+      setUser({ ...user, nome, cargo, departamento });
+      document.getElementById('pf-nome-display').textContent = nome;
+      showToast('Perfil atualizado com sucesso!', 'success');
+    } catch {
+      // Erro já exibido
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar alterações';
+    }
+  };
+
+  window.salvarSenha = async function() {
+    const nova      = document.getElementById('pf-senha-nova').value;
+    const confirmar = document.getElementById('pf-senha-confirmar').value;
+
+    if (!nova || nova.length < 6) { showToast('Senha deve ter pelo menos 6 caracteres.', 'error'); return; }
+    if (nova !== confirmar)        { showToast('As senhas não coincidem.', 'error'); return; }
+
+    const btn = document.getElementById('btn-salvar-senha');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Alterando...';
+
+    try {
+      await usersApi.updateProfile({ senha: nova });
+      document.getElementById('pf-senha-nova').value = '';
+      document.getElementById('pf-senha-confirmar').value = '';
+      showToast('Senha alterada com sucesso!', 'success');
+    } catch {
+      // Erro já exibido
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Alterar senha';
+    }
+  };
+
+  carregarPerfil();
+</script>
+</body>
+</html>
+

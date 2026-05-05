@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliacao 360 - Portal de Gestao de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/avaliacoes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2>Avaliação 360°</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown active" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link active"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ETAPA 1: SELEÇÃO DO TIPO -->
+  <div class="av-step" id="step-tipo">
+    <div class="av-step-box">
+      <p class="av-step-subtitle">Avaliação 360° — Admin avalia qualquer usuário do sistema</p>
+
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;font-size:13px;color:#1e40af;display:flex;gap:10px;align-items:flex-start;max-width:480px;width:100%">
+        <i class="fa-solid fa-arrows-spin" style="margin-top:2px;flex-shrink:0;font-size:16px"></i>
+        <div>
+          <strong>Avaliação 360°</strong> — Exclusiva para administradores.<br>
+          Permite avaliar qualquer usuário (gestor ou colaborador) com critérios completos. O avaliador não é revelado.
+        </div>
+      </div>
+
+      <div class="av-tipo-cards">
+        <div class="av-tipo-card" data-tipo="gestor" onclick="selecionarTipo360('gestor')">
+          <div class="av-tipo-icon"><i class="fa-solid fa-user-tie"></i></div>
+          <span>Avaliar Gestor</span>
+        </div>
+        <div class="av-tipo-card" data-tipo="colaborador" onclick="selecionarTipo360('colaborador')">
+          <div class="av-tipo-icon"><i class="fa-solid fa-users"></i></div>
+          <span>Avaliar Colaborador</span>
+        </div>
+        <div class="av-tipo-card" data-tipo="historico" onclick="selecionarTipo360('historico')">
+          <div class="av-tipo-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <span>Ver Histórico 360°</span>
+        </div>
+      </div>
+
+      <div class="av-step-actions">
+        <a href="../index.html" class="av-btn-voltar">Voltar</a>
+        <button class="av-btn-proximo" id="btn-proximo-360" onclick="irParaFormulario360()" disabled>
+          Próximo <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 2: FORMULÁRIO + HISTÓRICO -->
+  <div class="av-step" id="step-form" style="display:none">
+    <div class="wrapper av-wrapper">
+
+      <section class="av-form-card">
+        <div class="av-field">
+          <label for="av360-avaliado" id="av360-avaliado-label">Selecione quem avaliar</label>
+          <select id="av360-avaliado"><option value="">Carregando...</option></select>
+        </div>
+
+        <div class="av-criterios">
+          <p class="av-section-title">Critérios de Avaliação</p>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-regular fa-clock"></i> Pontualidade</span>
+            <div class="stars" data-criterio="pontualidade" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-regular fa-comments"></i> Comunicação</span>
+            <div class="stars" data-criterio="comunicacao" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-code"></i> Desempenho Técnico</span>
+            <div class="stars" data-criterio="tecnico" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-bolt"></i> Proatividade</span>
+            <div class="stars" data-criterio="proatividade" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+          <div class="av-criterio">
+            <span class="av-criterio-label"><i class="fa-solid fa-people-group"></i> Trabalho em Equipe</span>
+            <div class="stars" data-criterio="equipe" role="group"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          </div>
+        </div>
+
+        <div class="av-media-box" id="media-box-360">
+          <span>Média geral</span>
+          <span class="av-media-valor" id="media-geral-360">—</span>
+        </div>
+
+        <div class="av-field">
+          <label for="comentario-360">Comentário <span class="av-opcional">(opcional)</span></label>
+          <textarea id="comentario-360" placeholder="Descreva sua avaliação 360°..." rows="3"></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="av-btn-voltar-form" onclick="voltarParaTipo360()">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <button class="av-submit" onclick="enviarAvaliacao360()" id="btn-submit-360" style="flex:1;margin-top:0">
+            <i class="fa-solid fa-paper-plane"></i> Enviar Avaliação 360°
+          </button>
+        </div>
+      </section>
+
+      <!-- HISTÓRICO LATERAL -->
+      <section class="av-historico-card">
+        <div class="av-historico-header">
+          <p class="av-section-title">Histórico 360°</p>
+        </div>
+        <div id="historico-360">
+          <p class="av-empty">Carregando...</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ETAPA 3: HISTÓRICO COMPLETO -->
+  <div class="av-step" id="step-historico" style="display:none">
+    <div class="wrapper av-wrapper" style="justify-content:center">
+      <section class="av-historico-card" style="max-width:600px;width:100%">
+        <div class="av-historico-header">
+          <p class="av-section-title">Histórico de Avaliações 360°</p>
+        </div>
+        <div id="historico-360-full">
+          <p class="av-empty">Carregando...</p>
+        </div>
+        <button onclick="voltarParaTipo360()" style="margin-top:16px;background:#f1f5f9;color:var(--primary);box-shadow:none">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+      </section>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+  import { requireRole, getUser } from '../js/auth.js';
+  import { usersApi, evaluationsApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  // 360° é exclusiva para admin
+  requireRole('admin');
+
+  const user = getUser();
+  const notas = { pontualidade:0, comunicacao:0, tecnico:0, proatividade:0, equipe:0 };
+  let tipoSelecionado = null;
+  let avaliacoes360 = [];
+
+  const CRITERIOS_LABEL = { pontualidade:'Pontualidade', comunicacao:'Comunicação', tecnico:'Técnico', proatividade:'Proatividade', equipe:'Equipe' };
+  const TIPO_LABELS = { gestor_para_colaborador:'Gestor → Colaborador', colaborador_para_gestor:'Colaborador → Gestor', avaliacao_360:'360°' };
+
+  window.selecionarTipo360 = function(tipo) {
+    tipoSelecionado = tipo;
+    document.querySelectorAll('.av-tipo-card').forEach(c => c.classList.toggle('selected', c.dataset.tipo === tipo));
+    document.getElementById('btn-proximo-360').disabled = false;
+  };
+
+  window.irParaFormulario360 = async function() {
+    if (!tipoSelecionado) return;
+    if (tipoSelecionado === 'historico') {
+      document.getElementById('step-tipo').style.display = 'none';
+      document.getElementById('step-historico').style.display = 'flex';
+      carregarHistorico360Full();
+      return;
+    }
+    document.getElementById('step-tipo').style.display = 'none';
+    document.getElementById('step-form').style.display = 'block';
+
+    const label = document.getElementById('av360-avaliado-label');
+    label.textContent = tipoSelecionado === 'gestor' ? 'Gestor a avaliar' : 'Colaborador a avaliar';
+
+    // Carrega usuários do tipo selecionado
+    const select = document.getElementById('av360-avaliado');
+    select.innerHTML = '<option value="">Carregando...</option>';
+    try {
+      const res = await usersApi.list({ tipo: tipoSelecionado, limit: 200 });
+      const users = res.data.users.filter(u => u.id !== user.id);
+      if (!users.length) { select.innerHTML = `<option value="">Nenhum ${tipoSelecionado} disponível</option>`; return; }
+      select.innerHTML = '<option value="">Selecione...</option>' +
+        users.map(u => `<option value="${u.id}">${u.nome} (RA: ${u.ra})</option>`).join('');
+    } catch { select.innerHTML = '<option value="">Erro ao carregar</option>'; }
+
+    initStars();
+    carregarHistorico360();
+  };
+
+  window.voltarParaTipo360 = function() {
+    document.getElementById('step-form').style.display = 'none';
+    document.getElementById('step-historico').style.display = 'none';
+    document.getElementById('step-tipo').style.display = 'flex';
+    tipoSelecionado = null;
+    document.querySelectorAll('.av-tipo-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('btn-proximo-360').disabled = true;
+    Object.keys(notas).forEach(k => notas[k] = 0);
+    document.querySelectorAll('.stars span').forEach(s => s.classList.remove('active'));
+    document.getElementById('media-box-360').style.display = 'none';
+  };
+
+  function initStars() {
+    document.querySelectorAll('.stars').forEach(group => {
+      const criterio = group.dataset.criterio;
+      const spans = group.querySelectorAll('span');
+      spans.forEach((star, i) => {
+        // Remove listeners antigos clonando
+        const newStar = star.cloneNode(true);
+        star.parentNode.replaceChild(newStar, star);
+      });
+      // Re-seleciona após clone
+      group.querySelectorAll('span').forEach((star, i) => {
+        star.addEventListener('mouseover', () => highlight(group.querySelectorAll('span'), i));
+        star.addEventListener('mouseout',  () => highlight(group.querySelectorAll('span'), notas[criterio] - 1));
+        star.addEventListener('click', () => { notas[criterio] = i + 1; highlight(group.querySelectorAll('span'), i); atualizarMedia(); });
+      });
+    });
+  }
+
+  function highlight(spans, upTo) {
+    spans.forEach((s, i) => s.classList.toggle('active', i <= upTo));
+  }
+
+  function atualizarMedia() {
+    const vals = Object.values(notas).filter(v => v > 0);
+    const box = document.getElementById('media-box-360');
+    const el  = document.getElementById('media-geral-360');
+    if (!vals.length) { box.style.display = 'none'; return; }
+    box.style.display = 'flex';
+    el.textContent = (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1) + ' ★';
+  }
+
+  window.enviarAvaliacao360 = async function() {
+    const avaliadoId = document.getElementById('av360-avaliado').value;
+    const comentario = document.getElementById('comentario-360').value.trim();
+    if (!avaliadoId) { showToast('Selecione quem será avaliado.', 'error'); return; }
+    if (!Object.values(notas).some(v => v > 0)) { showToast('Avalie pelo menos um critério.', 'error'); return; }
+
+    const btn = document.getElementById('btn-submit-360');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    try {
+      await evaluationsApi.create({ avaliadoId, criterios: {...notas}, comentario: comentario || null, anonima: true });
+      showToast('Avaliação 360° enviada com sucesso!', 'success');
+      Object.keys(notas).forEach(k => notas[k] = 0);
+      document.querySelectorAll('.stars span').forEach(s => s.classList.remove('active'));
+      document.getElementById('av360-avaliado').value = '';
+      document.getElementById('comentario-360').value = '';
+      document.getElementById('media-box-360').style.display = 'none';
+      carregarHistorico360();
+    } catch {}
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Avaliação 360°'; }
+  };
+
+  async function carregarHistorico360() {
+    const container = document.getElementById('historico-360');
+    container.innerHTML = '<p class="av-empty">Carregando...</p>';
+    try {
+      const res = await evaluationsApi.list({ tipoAvaliacao: 'avaliacao_360', limit: 50 });
+      avaliacoes360 = res.data.evaluations;
+      renderHistorico(avaliacoes360, container);
+    } catch { container.innerHTML = '<p class="av-empty">Erro ao carregar.</p>'; }
+  }
+
+  async function carregarHistorico360Full() {
+    const container = document.getElementById('historico-360-full');
+    container.innerHTML = '<p class="av-empty">Carregando...</p>';
+    try {
+      const res = await evaluationsApi.list({ tipoAvaliacao: 'avaliacao_360', limit: 100 });
+      renderHistorico(res.data.evaluations, container);
+    } catch { container.innerHTML = '<p class="av-empty">Erro ao carregar.</p>'; }
+  }
+
+  function renderHistorico(lista, container) {
+    if (!lista.length) { container.innerHTML = '<p class="av-empty">Nenhuma avaliação 360° encontrada.</p>'; return; }
+    container.innerHTML = lista.map(a => {
+      const criteriosBadges = a.criterios
+        ? Object.entries(a.criterios).filter(([,v]) => v > 0)
+            .map(([k,v]) => `<span class="av-criterio-badge">${CRITERIOS_LABEL[k]||k}<span class="mini-stars">${'★'.repeat(v)}</span></span>`).join('')
+        : '';
+      return `
+        <div class="av-item">
+          <div class="av-item-header">
+            <span class="av-item-nome">${a.avaliado?.nome || 'Usuário'}</span>
+            <div class="av-item-meta">
+              <span class="av-item-tipo avaliacao_360">360°</span>
+              <span style="font-size:11px;background:#f5f3ff;color:#6d28d9;padding:2px 8px;border-radius:100px;font-weight:600"><i class="fa-solid fa-user-secret"></i> Anônima</span>
+              <span class="av-item-data">${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+            </div>
+          </div>
+          ${criteriosBadges ? `<div class="av-item-criterios">${criteriosBadges}</div>` : ''}
+          ${a.media ? `<div class="av-item-media">Média: ${a.media} ★</div>` : ''}
+          ${a.comentario ? `<p class="av-item-comentario">"${a.comentario}"</p>` : ''}
+        </div>`;
+    }).join('');
+  }
+</script>
+</body>
+</html>
+

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliacao 180 - Portal de Gestao de Pessoas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/avaliacao-180.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h2 id="r180-header-title">Avaliação 180°</h2>
+  <button id="dark-mode-btn" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></button>
+  <div class="user-menu" id="user-menu">
+    <div class="user" id="user-btn" onclick="toggleUserMenu()"><i class="fa-solid fa-user"></i></div>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-avatar" id="user-dropdown-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-dropdown-nome" id="user-dropdown-nome">Carregando...</div>
+          <div class="user-dropdown-tipo" id="user-dropdown-tipo"></div>
+        </div>
+      </div>
+      <div class="user-dropdown-divider"></div>
+      <a href="../perfil.html" class="user-dropdown-item"><i class="fa-solid fa-user-pen"></i> Meu Perfil</a>
+      <button class="user-dropdown-item user-dropdown-sair" id="btn-sair-header" onclick="sairDaConta()" style="display:none">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="navbar-item"><a href="../index.html" class="navbar-link"><i class="fa-solid fa-home"></i><span>Início</span></a></li>
+    <li class="navbar-item" data-role="admin"><a href="cadastrar.html" class="navbar-link"><i class="fa-solid fa-user-plus"></i><span>Cadastrar</span></a></li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="consultar.html" class="navbar-link"><i class="fa-solid fa-magnifying-glass"></i><span>Consultar</span></a></li>
+    <li class="navbar-item navbar-item-dropdown">
+      <a href="#" class="navbar-link navbar-link-dropdown active" onclick="toggleSubmenu(event, this)">
+        <i class="fa-solid fa-star"></i><span>Avaliações</span><i class="fa-solid fa-chevron-down navbar-chevron"></i>
+      </a>
+      <ul class="navbar-submenu">
+        <li><a href="avaliacoes.html" class="navbar-submenu-link"><i class="fa-solid fa-star"></i> Avaliações</a></li>
+        <li><a href="nine-box.html" class="navbar-submenu-link"><i class="fa-solid fa-th"></i> Nine Box</a></li>
+        <li><a href="competencias.html" class="navbar-submenu-link"><i class="fa-solid fa-clipboard-check"></i> Competências</a></li>
+        <li><a href="avaliacao-180.html" class="navbar-submenu-link active"><i class="fa-solid fa-rotate"></i> 180°</a></li>
+        <li><a href="avaliacao-360.html" class="navbar-submenu-link"><i class="fa-solid fa-arrows-spin"></i> 360°</a></li>
+      </ul>
+    </li>
+    <li class="navbar-item" data-role="gestorOrAdmin"><a href="relatorios.html" class="navbar-link"><i class="fa-solid fa-chart-bar"></i><span>Relatórios</span></a></li>
+    <li class="navbar-item"><a href="../perfil.html" class="navbar-link"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+  </ul>
+</nav>
+
+<main class="r180-main">
+
+  <!-- LISTA DE AVALIAÇÕES 180° -->
+  <div id="tela-lista" class="r180-tela">
+    <div class="r180-lista-header">
+      <div>
+        <h3>Avaliações 180° — Gestor × Colaborador</h3>
+        <p>Crie e gerencie avaliações 180° vinculando avaliados e competências</p>
+      </div>
+      <button class="r180-btn-novo" id="btn-nova-180" onclick="abrirFormulario()">
+        <i class="fa-solid fa-plus"></i> Nova Avaliação
+      </button>
+    </div>
+    <div id="r180-lista-container">
+      <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:32px;color:var(--primary-light)"></i>
+        <p style="margin-top:12px">Carregando avaliações...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div id="tela-form" class="r180-tela" style="display:none">
+    <div class="r180-card">
+
+      <div class="r180-card-header">
+        <div>
+          <h3>Resumo:</h3>
+          <p class="r180-card-sub">
+            <i class="fa-solid fa-circle-dot" style="color:var(--success)"></i>
+            Revise todas as informações antes de finalizar a avaliação.
+          </p>
+        </div>
+        <button class="r180-btn-cancelar" onclick="fecharFormulario()">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </button>
+      </div>
+
+      <div class="r180-info-grid">
+        <div class="r180-info-item">
+          <i class="fa-solid fa-file-lines"></i>
+          <div><label>Nome:</label><input type="text" id="r180-nome" placeholder="Nome da avaliação"></div>
+        </div>
+        <div class="r180-info-item">
+          <i class="fa-solid fa-building"></i>
+          <div><label>Empresa:</label><input type="text" id="r180-empresa" placeholder="Nome da empresa"></div>
+        </div>
+        <div class="r180-info-item">
+          <i class="fa-solid fa-user-tie"></i>
+          <div>
+            <label>Gestor responsável:</label>
+            <select id="r180-gestor"><option value="">Selecione o gestor...</option></select>
+          </div>
+        </div>
+        <div class="r180-info-item">
+          <i class="fa-solid fa-sitemap"></i>
+          <div><label>Setor:</label><input type="text" id="r180-setor" placeholder="Ex: Tecnologia da Informação"></div>
+        </div>
+        <div class="r180-info-item r180-info-datas">
+          <i class="fa-solid fa-calendar" style="font-size:15px;color:var(--primary-light);flex-shrink:0;width:18px;text-align:center"></i>
+          <div class="r180-data-pair"><label>Início:</label><input type="date" id="r180-inicio"></div>
+          <div class="r180-data-pair"><label>Fim:</label><input type="date" id="r180-fim"></div>
+        </div>
+      </div>
+
+      <div class="r180-section">
+        <h4 class="r180-section-title">Descrição:</h4>
+        <textarea id="r180-descricao" rows="3" placeholder="Adicione uma descrição detalhada sobre a avaliação e seus objetivos."></textarea>
+      </div>
+
+      <!-- AVALIADOS -->
+      <div class="r180-section">
+        <div class="r180-section-header">
+          <h4 class="r180-section-title">Avaliados:</h4>
+          <button class="r180-btn-add" onclick="abrirModalAvaliados()">
+            <i class="fa-solid fa-plus"></i> Adicionar
+          </button>
+        </div>
+        <div id="r180-avaliados-lista">
+          <p class="r180-empty-small">Nenhum avaliado adicionado.</p>
+        </div>
+      </div>
+
+      <!-- COMPETÊNCIAS -->
+      <div class="r180-section">
+        <div class="r180-section-header">
+          <h4 class="r180-section-title">Competências avaliadas:</h4>
+          <button class="r180-btn-add" onclick="abrirModalCompetencias()">
+            <i class="fa-solid fa-plus"></i> Adicionar
+          </button>
+        </div>
+        <div id="r180-competencias-lista">
+          <p class="r180-empty-small">Nenhuma competência adicionada.</p>
+        </div>
+      </div>
+
+      <div class="r180-form-actions">
+        <button class="r180-btn-voltar" onclick="fecharFormulario()">Voltar</button>
+        <button class="r180-btn-salvar" id="btn-salvar-180" onclick="salvarAvaliacao180()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span id="r180-btn-texto">Criar Avaliação</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL: ADICIONAR AVALIADOS -->
+<div class="r180-modal-overlay" id="modal-avaliados">
+  <div class="r180-modal r180-modal-lg">
+    <div class="r180-modal-header">
+      <div>
+        <h4>Selecionar Avaliados</h4>
+        <p class="r180-modal-sub"><i class="fa-solid fa-circle-dot" style="color:var(--success)"></i> Selecione os colaboradores que serão avaliados</p>
+      </div>
+      <button class="r180-btn-cancelar" onclick="fecharModalAvaliados()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+    </div>
+    <div class="r180-select-bar">
+      <span>Selecione os colaboradores</span>
+      <div class="r180-select-bar-right">
+        <span class="r180-select-todos-label">Selecionar Todos:</span>
+        <input type="checkbox" id="check-todos-av" onchange="toggleTodosAvaliados(this)" style="width:18px;height:18px;cursor:pointer;accent-color:var(--primary)">
+        <button class="r180-modal-close" onclick="fecharModalAvaliados()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="r180-check-lista" id="modal-av-lista"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)">
+      <button class="r180-btn-voltar" onclick="fecharModalAvaliados()">Cancelar</button>
+      <button class="r180-btn-proximo" onclick="confirmarAvaliados()">Confirmar <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADICIONAR COMPETÊNCIAS -->
+<div class="r180-modal-overlay" id="modal-competencias">
+  <div class="r180-modal r180-modal-lg">
+    <div class="r180-modal-header">
+      <div>
+        <h4>Competências para os colaboradores:</h4>
+        <p class="r180-modal-sub"><i class="fa-solid fa-circle-dot" style="color:var(--success)"></i> Selecione as competências que serão avaliadas</p>
+      </div>
+      <button class="r180-btn-cancelar" onclick="fecharModalCompetencias()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+    </div>
+    <div class="r180-comp-search-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="modal-comp-busca" placeholder="Pesquisar..." oninput="filtrarCompetenciasModal(this.value)">
+    </div>
+    <div class="r180-check-lista" id="modal-comp-lista" style="min-height:120px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)">
+      <button class="r180-btn-voltar" onclick="fecharModalCompetencias()">Cancelar</button>
+      <button class="r180-btn-proximo" onclick="confirmarCompetencias()">Confirmar <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { requireAuth, isGestorOrAdmin, isAdmin, getUser } from '../js/auth.js';
+  import { usersApi, evaluationsApi, competenciesApi } from '../js/api.js';
+  import { showToast } from '../js/components/toast.js';
+  import '../js/navbar.js';
+
+  requireAuth();
+
+  const user = getUser();
+  let editandoId = null;
+  let avaliados180 = [];       // lista de avaliações 180 salvas localmente (sem backend dedicado)
+  let avaliadosSelecionados = [];
+  let competenciasSelecionadas = [];
+  let todosColaboradores = [];
+  let todasCompetencias = [];
+
+  const TIPO_LABELS = { desempenho:'Desempenho', comportamento:'Comportamento', tecnica:'Técnica', lideranca:'Liderança' };
+
+  // Oculta botão nova para colaboradores
+  if (!isGestorOrAdmin()) document.getElementById('btn-nova-180').style.display = 'none';
+
+  // Carrega dados necessários
+  async function init() {
+    try {
+      const [resUsers, resComps] = await Promise.all([
+        usersApi.list({ tipo: 'colaborador', limit: 200 }),
+        competenciesApi.list({ limit: 100 })
+      ]);
+      todosColaboradores = resUsers.data.users;
+      todasCompetencias  = resComps.data.competencies;
+    } catch {}
+
+    // Carrega gestores para o select
+    try {
+      const resGestores = await usersApi.list({ tipo: 'gestor', limit: 100 });
+      const sel = document.getElementById('r180-gestor');
+      sel.innerHTML = '<option value="">Selecione o gestor...</option>' +
+        resGestores.data.users.map(g => `<option value="${g.id}">${g.nome}</option>`).join('');
+    } catch {}
+
+    // Carrega avaliações 180 existentes da API
+    try {
+      const res = await evaluationsApi.list({ tipoAvaliacao: 'avaliacao_180', limit: 100 });
+      avaliados180 = res.data.evaluations;
+    } catch {}
+
+    renderLista();
+  }
+
+  function renderLista() {
+    const container = document.getElementById('r180-lista-container');
+    if (!avaliados180.length) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
+          <i class="fa-solid fa-clipboard-list" style="font-size:48px;color:var(--border);display:block;margin-bottom:16px"></i>
+          <p style="font-size:15px;margin:0 0 16px">Nenhuma avaliação 180° registrada ainda.</p>
+          ${isGestorOrAdmin() ? '<button class="r180-btn-novo" onclick="abrirFormulario()" style="margin:0 auto"><i class="fa-solid fa-plus"></i> Criar primeira avaliação</button>' : ''}
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = avaliados180.map(a => `
+      <div class="r180-item-card">
+        <div class="r180-item-icon"><i class="fa-solid fa-rotate"></i></div>
+        <div class="r180-item-info">
+          <div class="r180-item-nome">${a.avaliado?.nome || 'Avaliação 180°'}</div>
+          <div class="r180-item-meta">
+            <span><i class="fa-solid fa-user-tie"></i> ${a.avaliado?.tipo || '—'}</span>
+            <span><i class="fa-solid fa-calendar"></i> ${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+          </div>
+          <div class="r180-item-badges">
+            <span class="r180-badge r180-badge-tipo">180°</span>
+            ${a.media ? `<span class="r180-badge r180-badge-ativo">Média: ${a.media} ★</span>` : ''}
+            ${a.anonima ? '<span class="r180-badge" style="background:#f5f3ff;color:#6d28d9"><i class="fa-solid fa-user-secret"></i> Anônima</span>' : ''}
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  window.abrirFormulario = function(id = null) {
+    editandoId = id;
+    avaliadosSelecionados = [];
+    competenciasSelecionadas = [];
+    document.getElementById('tela-lista').style.display = 'none';
+    document.getElementById('tela-form').style.display = 'block';
+    document.getElementById('r180-header-title').textContent = id ? 'Editar Avaliação 180°' : 'Nova Avaliação 180°';
+    document.getElementById('r180-btn-texto').textContent = id ? 'Salvar Alterações' : 'Criar Avaliação';
+    document.getElementById('r180-nome').value = '';
+    document.getElementById('r180-empresa').value = '';
+    document.getElementById('r180-setor').value = '';
+    document.getElementById('r180-descricao').value = '';
+    document.getElementById('r180-inicio').value = '';
+    document.getElementById('r180-fim').value = '';
+    renderAvaliados();
+    renderCompetenciasVinculadas();
+  };
+
+  window.fecharFormulario = function() {
+    document.getElementById('tela-form').style.display = 'none';
+    document.getElementById('tela-lista').style.display = 'block';
+    document.getElementById('r180-header-title').textContent = 'Avaliação 180°';
+    editandoId = null;
+  };
+
+  // --- MODAL AVALIADOS ---
+  window.abrirModalAvaliados = function() {
+    const container = document.getElementById('modal-av-lista');
+    if (!todosColaboradores.length) {
+      container.innerHTML = '<p class="r180-empty-small">Nenhum colaborador cadastrado.</p>';
+    } else {
+      container.innerHTML = todosColaboradores.map(c => {
+        const sel = avaliadosSelecionados.find(a => a.id === c.id);
+        return `
+          <label class="r180-check-item ${sel ? 'selecionado' : ''}" onclick="toggleCheckAv(this)">
+            <div class="r180-check-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="r180-check-info">
+              <div class="r180-check-nome">${c.nome}</div>
+              <div class="r180-check-tags"><span class="r180-tag">RA: <strong>${c.ra}</strong></span></div>
+            </div>
+            <input type="checkbox" value="${c.id}" ${sel ? 'checked' : ''} onclick="event.stopPropagation()">
+          </label>`;
+      }).join('');
+    }
+    document.getElementById('modal-avaliados').classList.add('open');
+  };
+
+  window.fecharModalAvaliados = function() {
+    document.getElementById('modal-avaliados').classList.remove('open');
+  };
+
+  window.toggleCheckAv = function(label) {
+    const cb = label.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    label.classList.toggle('selecionado', cb.checked);
+  };
+
+  window.toggleTodosAvaliados = function(cb) {
+    document.querySelectorAll('#modal-av-lista .r180-check-item').forEach(item => {
+      const input = item.querySelector('input[type="checkbox"]');
+      input.checked = cb.checked;
+      item.classList.toggle('selecionado', cb.checked);
+    });
+  };
+
+  window.confirmarAvaliados = function() {
+    const selecionados = document.querySelectorAll('#modal-av-lista input[type="checkbox"]:checked');
+    avaliadosSelecionados = [];
+    selecionados.forEach(cb => {
+      const pessoa = todosColaboradores.find(c => c.id === cb.value);
+      if (pessoa) avaliadosSelecionados.push(pessoa);
+    });
+    renderAvaliados();
+    fecharModalAvaliados();
+    if (avaliadosSelecionados.length) showToast(`${avaliadosSelecionados.length} avaliado(s) adicionado(s)!`);
+  };
+
+  function renderAvaliados() {
+    const container = document.getElementById('r180-avaliados-lista');
+    if (!avaliadosSelecionados.length) {
+      container.innerHTML = '<p class="r180-empty-small">Nenhum avaliado adicionado.</p>';
+      return;
+    }
+    container.innerHTML = avaliadosSelecionados.map(a => `
+      <div class="r180-avaliado-item">
+        <div class="r180-avaliado-avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="r180-avaliado-info">
+          <div class="r180-avaliado-nome">${a.nome}</div>
+          <div class="r180-avaliado-tags"><span class="r180-tag">RA: <strong>${a.ra}</strong></span></div>
+        </div>
+        <button class="r180-btn-icon del" onclick="removerAvaliado('${a.id}')"><i class="fa-solid fa-xmark"></i></button>
+      </div>`).join('');
+  }
+
+  window.removerAvaliado = function(id) {
+    avaliadosSelecionados = avaliadosSelecionados.filter(a => a.id !== id);
+    renderAvaliados();
+  };
+
+  // --- MODAL COMPETÊNCIAS ---
+  window.abrirModalCompetencias = function() {
+    document.getElementById('modal-comp-busca').value = '';
+    renderCompetenciasModal('');
+    document.getElementById('modal-competencias').classList.add('open');
+  };
+
+  window.fecharModalCompetencias = function() {
+    document.getElementById('modal-competencias').classList.remove('open');
+  };
+
+  window.filtrarCompetenciasModal = function(busca) {
+    renderCompetenciasModal(busca.toLowerCase());
+  };
+
+  function renderCompetenciasModal(busca) {
+    const container = document.getElementById('modal-comp-lista');
+    let comps = todasCompetencias;
+    if (busca) comps = comps.filter(c => c.nome.toLowerCase().includes(busca) || (c.descricao||'').toLowerCase().includes(busca));
+
+    if (!comps.length) {
+      container.innerHTML = '<p class="r180-empty-small">Nenhuma competência encontrada.</p>';
+      return;
+    }
+
+    container.innerHTML = comps.map(c => {
+      const sel = competenciasSelecionadas.find(x => x.id === c.id);
+      return `
+        <label class="r180-comp-check-item ${sel ? 'selecionado' : ''}" onclick="toggleCheckComp(this)">
+          <div class="r180-comp-check-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="r180-comp-check-info">
+            <div class="r180-comp-check-nome">${c.nome}</div>
+            ${c.tipo ? `<div class="r180-comp-check-desc">${TIPO_LABELS[c.tipo]||c.tipo}${c.descricao ? ' — ' + c.descricao : ''}</div>` : ''}
+          </div>
+          <input type="checkbox" value="${c.id}" ${sel ? 'checked' : ''} onclick="event.stopPropagation()">
+        </label>`;
+    }).join('');
+  }
+
+  window.toggleCheckComp = function(label) {
+    const cb = label.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    label.classList.toggle('selecionado', cb.checked);
+  };
+
+  window.confirmarCompetencias = function() {
+    const selecionados = document.querySelectorAll('#modal-comp-lista input[type="checkbox"]:checked');
+    competenciasSelecionadas = [];
+    selecionados.forEach(cb => {
+      const comp = todasCompetencias.find(c => c.id === cb.value);
+      if (comp) competenciasSelecionadas.push(comp);
+    });
+    renderCompetenciasVinculadas();
+    fecharModalCompetencias();
+    if (competenciasSelecionadas.length) showToast(`${competenciasSelecionadas.length} competência(s) adicionada(s)!`);
+  };
+
+  function renderCompetenciasVinculadas() {
+    const container = document.getElementById('r180-competencias-lista');
+    if (!competenciasSelecionadas.length) {
+      container.innerHTML = '<p class="r180-empty-small">Nenhuma competência adicionada.</p>';
+      return;
+    }
+    container.innerHTML = competenciasSelecionadas.map(c => `
+      <div class="r180-comp-item">
+        <div class="r180-comp-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="r180-comp-info">
+          <div class="r180-comp-nome">${c.nome}</div>
+          ${c.tipo ? `<span class="r180-comp-badge">${TIPO_LABELS[c.tipo]||c.tipo}</span>` : ''}
+          ${c.descricao ? `<div class="r180-comp-desc">${c.descricao}</div>` : ''}
+        </div>
+        <div class="r180-comp-actions">
+          <button class="r180-btn-icon del" onclick="removerCompetencia('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>`).join('');
+  }
+
+  window.removerCompetencia = function(id) {
+    competenciasSelecionadas = competenciasSelecionadas.filter(c => c.id !== id);
+    renderCompetenciasVinculadas();
+  };
+
+  // --- SALVAR: cria uma avaliação 180 para cada avaliado ---
+  window.salvarAvaliacao180 = async function() {
+    const nome     = document.getElementById('r180-nome').value.trim();
+    const empresa  = document.getElementById('r180-empresa').value.trim();
+    const gestorId = document.getElementById('r180-gestor').value;
+
+    if (!nome)    { showToast('Digite o nome da avaliação.', 'error'); return; }
+    if (!empresa) { showToast('Digite o nome da empresa.', 'error'); return; }
+    if (!avaliadosSelecionados.length) { showToast('Adicione pelo menos um avaliado.', 'error'); return; }
+
+    const btn = document.getElementById('btn-salvar-180');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+    try {
+      // Cria uma avaliação 180 para cada avaliado selecionado
+      const promises = avaliadosSelecionados.map(avaliado =>
+        evaluationsApi.create({
+          avaliadoId:    avaliado.id,
+          criterios:     { pontualidade: 0, comunicacao: 0, tecnico: 0, proatividade: 0, equipe: 0 },
+          comentario:    `Avaliação 180° — ${nome} — ${empresa}`,
+          anonima:       true,
+          tipoAvaliacao: 'avaliacao_180',
+        })
+      );
+      await Promise.all(promises);
+      showToast(`Avaliação 180° criada para ${avaliadosSelecionados.length} avaliado(s)!`, 'success');
+      fecharFormulario();
+      await init();
+    } catch {}
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span id="r180-btn-texto">Criar Avaliação</span>'; }
+  };
+
+  // Fechar modais clicando fora
+  document.getElementById('modal-avaliados').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModalAvaliados(); });
+  document.getElementById('modal-competencias').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModalCompetencias(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharModalAvaliados(); fecharModalCompetencias(); } });
+
+  init();
+</script>
+</body>
+</html>
+
