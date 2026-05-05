@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -21,7 +21,7 @@ async function main() {
     data: {
       ra: '1000000',
       nome: 'Administrador',
-      email: 'admin@empresa.com',
+      email: 'admin@eniac.edu.br',
       senha: await bcrypt.hash('admin123', 10),
       tipo: 'admin'
     }
@@ -36,7 +36,7 @@ async function main() {
     data: {
       ra: '2021001',
       nome: 'João Silva',
-      email: 'joao@empresa.com',
+      email: 'joao@eniac.edu.br',
       senha: await bcrypt.hash('senha123', 10),
       tipo: 'gestor',
       departamento: 'Tecnologia',
@@ -48,7 +48,7 @@ async function main() {
     data: {
       ra: '2021002',
       nome: 'Maria Santos',
-      email: 'maria@empresa.com',
+      email: 'maria@eniac.edu.br',
       senha: await bcrypt.hash('senha123', 10),
       tipo: 'gestor',
       departamento: 'Recursos Humanos',
@@ -65,7 +65,7 @@ async function main() {
     data: {
       ra: '2022001',
       nome: 'Ana Costa',
-      email: 'ana@empresa.com',
+      email: 'ana@eniac.edu.br',
       senha: await bcrypt.hash('senha123', 10),
       tipo: 'colaborador',
       cargo: 'Desenvolvedora',
@@ -77,7 +77,7 @@ async function main() {
     data: {
       ra: '2022002',
       nome: 'Carlos Oliveira',
-      email: 'carlos@empresa.com',
+      email: 'carlos@eniac.edu.br',
       senha: await bcrypt.hash('senha123', 10),
       tipo: 'colaborador',
       cargo: 'Analista',
@@ -89,7 +89,7 @@ async function main() {
     data: {
       ra: '2022003',
       nome: 'Beatriz Lima',
-      email: 'beatriz@empresa.com',
+      email: 'beatriz@eniac.edu.br',
       senha: await bcrypt.hash('senha123', 10),
       tipo: 'colaborador',
       cargo: 'Designer',
