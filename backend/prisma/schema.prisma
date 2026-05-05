@@ -1,0 +1,116 @@
+// Schema Prisma Completo para o Portal de Gestão de Pessoas
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// MODELO DE USUÁRIO (Estagiário 1)
+// ==========================================
+model User {
+  id           String   @id @default(uuid())
+  ra           String   @unique  // Registro Acadêmico (5 a 10 caracteres)
+  nome         String
+  email        String   @unique
+  senha        String
+  tipo         UserType
+  foto         String?
+  cargo        String?
+  departamento String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relações
+  avaliacoesFeitas    Evaluation[] @relation("AvaliadorRelation")
+  avaliacoesRecebidas Evaluation[] @relation("AvaliadoRelation")
+  nineBoxAvaliacoes   NineBox[]
+
+  @@index([ra])  // Índice para busca rápida por RA
+  @@map("users")
+}
+
+enum UserType {
+  admin        // Administrador (criado apenas via seed)
+  gestor       // Gerente/Gestor
+  colaborador  // Colaborador/Funcionário
+}
+
+// ==========================================
+// MODELO DE AVALIAÇÃO (Estagiário 2)
+// ==========================================
+model Evaluation {
+  id            String        @id @default(uuid())
+  tipoAvaliacao TipoAvaliacao // Tipo específico da avaliação
+  avaliadorId   String        // Mantido para controle interno (não exposto)
+  avaliadoId    String
+  criterios     Json          // { pontualidade: 5, comunicacao: 4, ... }
+  media         Float?
+  comentario    String?
+  anonima       Boolean       @default(true) // Avaliação anônima por padrão
+  data          DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relações (mantidas para controle interno)
+  avaliador User @relation("AvaliadorRelation", fields: [avaliadorId], references: [id], onDelete: Cascade)
+  avaliado  User @relation("AvaliadoRelation", fields: [avaliadoId], references: [id], onDelete: Cascade)
+
+  @@index([avaliadoId])
+  @@index([avaliadorId])
+  @@index([data])
+  @@index([tipoAvaliacao])
+  @@index([anonima])
+  @@map("evaluations")
+}
+
+enum TipoAvaliacao {
+  gestor_para_colaborador    // Gestor avalia colaborador
+  colaborador_para_gestor    // Colaborador avalia gestor
+  avaliacao_360             // Avaliação 360° (todos avaliam todos)
+  avaliacao_180             // Avaliação 180° (subordinados avaliam chefe)
+}
+
+// ==========================================
+// MODELO NINE BOX (Estagiário 2)
+// ==========================================
+model NineBox {
+  id          String   @id @default(uuid())
+  pessoaId    String
+  performance Int      // 1 (Baixo), 2 (Médio), 3 (Alto)
+  potential   Int      // 1 (Baixo), 2 (Médio), 3 (Alto)
+  categoria   String   // Superstar, Estrela, Especialista, etc.
+  comentario  String?
+  data        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relações
+  pessoa User @relation(fields: [pessoaId], references: [id], onDelete: Cascade)
+
+  @@index([pessoaId])
+  @@index([data])
+  @@map("nine_box")
+}
+
+// ==========================================
+// MODELO DE COMPETÊNCIA (Estagiário 3)
+// ==========================================
+model Competency {
+  id            String   @id @default(uuid())
+  nome          String
+  descricao     String
+  tipo          String   // 'desempenho', 'comportamento', 'tecnica', 'lideranca'
+  competenciaDe String   // 'gestor', 'colaborador', 'todos'
+  criterios     Json     // Array de strings com os critérios
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([tipo])
+  @@index([competenciaDe])
+  @@map("competencies")
+}
